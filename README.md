@@ -29,6 +29,7 @@ $ npm run dev
 * typescript
 * leaflet: mappa
 * React: componenti dell'UI
+* Tailwind: stile
 
 
 ## Note
