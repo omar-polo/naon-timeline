@@ -1,30 +1,78 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
-import { LatLngBounds } from 'leaflet';
+import { LatLngBounds, type LatLngExpression } from 'leaflet';
+import { useState } from 'react';
+
+interface IMarker {
+  pos: LatLngExpression,
+  text: string,
+}
+
+const markers: { [id: string] : [IMarker]; } = {
+  antica: [{
+    pos: [45.9676511,12.6818763],
+    text: "Torre",
+  }],
+  moderna: [{
+    pos: [45.9545329, 12.6593973],
+    text: "municipio",
+  }],
+  contemporanea: [{
+    pos: [45.9568299, 12.6657233],
+    text: "PAFF!"
+  }],
+}
+
+interface IEpochSelector {
+  target: string,
+  current: string,
+  setEpoch(epoch : string): void,
+}
+
+const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
+  const c = "mx-1 p-2"
+
+  if (target == current) {
+    return <strong className={c}>{target}</strong>
+  }
+
+  return <button className={c} onClick={() => setEpoch(target)}>{target}</button>
+}
 
 function App() {
+  const [epoch, setEpoch] = useState('antica')
+
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
   return (
-    <>
+    <div className="w-screen h-screen flex flex-col">
+
       <MapContainer
         maxBounds={bounds} center={[45.9544979, 12.6596338]}
-        zoom={13} maxZoom={18} minZoom={10}
+        zoom={14} maxZoom={18} minZoom={10}
         scrollWheelZoom={true}
-        className="w-screen h-screen"
+	className="grow"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[45.9676511,12.6818763]}>
-          <Popup>
-                   A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+	{
+	  markers[epoch].map((e, i) =>
+	    <Marker key={i} position={e.pos}>
+	      <Popup>{e.text}</Popup>
+	    </Marker>)
+	}
       </MapContainer>
-    </>
+
+      <div className="text-center p-3">
+	<EpochSelector target="antica" current={epoch} setEpoch={setEpoch} />
+	<EpochSelector target="moderna" current={epoch} setEpoch={setEpoch} />
+	<EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
+      </div>
+
+    </div>
   )
 }
 
