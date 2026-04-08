@@ -52,8 +52,21 @@ const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
   return <button className={c} onClick={() => setEpoch(target)}>{target}</button>
 }
 
+const Panel = ({panel, close} : {panel: string, close(): void}) => {
+  return (
+    <div className="absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-9999"
+      onClick={_ => close()}>
+      <div className="bg-white h-full w-1/3 p-4"
+	onClick={e => e.stopPropagation()}>
+	<p>descrizione del punto: <br/> <em>{panel}</em></p>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   const [epoch, setEpoch] = useState('antica')
+  const [panel, setPanel] = useState<string|null>(null)
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
@@ -72,8 +85,13 @@ function App() {
         />
 	{
 	  markers[epoch].map((e, i) =>
-	    <Marker key={i} position={e.pos}>
-	      <Popup>{e.text}</Popup>
+	    <Marker key={i} position={e.pos} eventHandlers={{
+	      click: _ => {
+		console.log("setting panel to", e.text)
+		setPanel(e.text)
+	      }
+	    }}>
+	      {/* <Popup>{e.text}</Popup> */}
 	    </Marker>)
 	}
       </MapContainer>
@@ -83,6 +101,8 @@ function App() {
 	<EpochSelector target="moderna" current={epoch} setEpoch={setEpoch} />
 	<EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
       </div>
+
+      { panel != null && <Panel panel={panel} close={() => setPanel(null)} /> }
 
     </div>
   )
