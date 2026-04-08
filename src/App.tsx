@@ -13,14 +13,26 @@ const markers: { [id: string] : [IMarker]; } = {
   antica: [{
     pos: [45.9676511,12.6818763],
     text: "Torre",
+  }, {
+    pos: [45.9686511,12.6418763],
+    text: "punto a caso",
+  }, {
+    pos: [45.9499511,12.6425763],
+    text: "punto a caso due",
   }],
   moderna: [{
     pos: [45.9545329, 12.6593973],
     text: "municipio",
+  }, {
+    pos: [45.9666511,12.6516763],
+    text: "qualcosa di diverso",
   }],
   contemporanea: [{
     pos: [45.9568299, 12.6657233],
     text: "PAFF!"
+  }, {
+    pos: [45.9564299, 12.6543233],
+    text: "stazione"
   }],
 }
 
@@ -31,7 +43,7 @@ interface IEpochSelector {
 }
 
 const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
-  const c = "mx-1 p-2"
+  const c = "mx-1 p-2 cursor-pointer"
 
   if (target == current) {
     return <strong className={c}>{target}</strong>
