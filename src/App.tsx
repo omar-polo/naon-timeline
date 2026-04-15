@@ -7,6 +7,7 @@ import { useState } from 'react';
 interface IMarker {
   pos: LatLngExpression,
   text: string,
+  image?: string,
 }
 
 const markers: { [id: string] : [IMarker]; } = {
@@ -19,6 +20,7 @@ const markers: { [id: string] : [IMarker]; } = {
   }, {
     pos: [45.9499511,12.6425763],
     text: "punto a caso due",
+    image: "https://placehold.co/600x400?text=Punto+di+interesse",
   }],
   moderna: [{
     pos: [45.9545329, 12.6593973],
@@ -52,13 +54,14 @@ const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
   return <button className={c} onClick={() => setEpoch(target)}>{target}</button>
 }
 
-const Panel = ({panel, close} : {panel: string, close(): void}) => {
+const Panel = ({mark, close} : {mark: IMarker, close(): void}) => {
   return (
     <div className="absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-9999"
       onClick={_ => close()}>
       <div className="bg-white h-full w-1/3 p-4"
 	onClick={e => e.stopPropagation()}>
-	<p>descrizione del punto: <br/> <em>{panel}</em></p>
+	{ mark.image && <img src={mark.image} alt={"image for "+ mark.text} className="" /> }
+	<p>descrizione del punto: <br/> <em>{mark.text}</em></p>
       </div>
     </div>
   )
@@ -66,7 +69,7 @@ const Panel = ({panel, close} : {panel: string, close(): void}) => {
 
 function App() {
   const [epoch, setEpoch] = useState('antica')
-  const [panel, setPanel] = useState<string|null>(null)
+  const [mark, setMark] = useState<IMarker|null>(null)
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
@@ -86,10 +89,7 @@ function App() {
 	{
 	  markers[epoch].map((e, i) =>
 	    <Marker key={i} position={e.pos} eventHandlers={{
-	      click: _ => {
-		console.log("setting panel to", e.text)
-		setPanel(e.text)
-	      }
+	      click: _ => setMark(e)
 	    }}>
 	      {/* <Popup>{e.text}</Popup> */}
 	    </Marker>)
@@ -102,7 +102,7 @@ function App() {
 	<EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
       </div>
 
-      { panel != null && <Panel panel={panel} close={() => setPanel(null)} /> }
+      { mark != null && <Panel mark={mark} close={() => setMark(null)} /> }
 
     </div>
   )
