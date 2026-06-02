@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds, type LatLngExpression } from 'leaflet';
@@ -114,9 +114,8 @@ function App() {
           markers['antica'].map((e, i) =>
             <Marker key={i} position={e.pos} eventHandlers={{
               click: _ => setMark(e)
-            }}>
-              {/* <Popup>{e.text}</Popup> */}
-            </Marker>)
+            }}/>
+          )
         }
       </MapContainer>
 
