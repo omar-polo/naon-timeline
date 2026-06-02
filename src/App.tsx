@@ -63,7 +63,7 @@ const PanelBody = ({mark} : {mark: IMarker}) => {
   )
 }
 
-const Panel = ({mark, close} : {mark: IMarker, close(): void}) => {
+const Panel = ({mark, close} : {mark: IMarker | null, close(): void}) => {
   const show = mark != null
   return (
     <div>
