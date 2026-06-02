@@ -4,6 +4,8 @@ import 'leaflet/dist/leaflet.css';
 import { LatLngBounds, type LatLngExpression } from 'leaflet';
 import { useState } from 'react';
 
+import YearStrip from "./YearStrip";
+
 interface IMarker {
   pos: LatLngExpression,
   title: string,
@@ -108,6 +110,8 @@ function App() {
   const [epoch, setEpoch] = useState('antica')
   const [mark, setMark] = useState<IMarker|null>(null)
 
+  const [year, setYear] = useState(2000);
+
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
   return (
@@ -133,10 +137,14 @@ function App() {
         }
       </MapContainer>
 
-      <div className="text-center p-3">
-        <EpochSelector target="antica" current={epoch} setEpoch={setEpoch} />
-        <EpochSelector target="moderna" current={epoch} setEpoch={setEpoch} />
-        <EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
+      <div className="text-center">
+        <YearStrip
+          value={year}
+          onChange={setYear}
+          min={-100}
+          max={2000}
+          step={50}
+        />
       </div>
 
       <Panel mark={mark} close={() => setMark(null)} />
