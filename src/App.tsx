@@ -45,22 +45,6 @@ const markers: Record<string, IMarker[]> = {
   // }],
 }
 
-interface IEpochSelector {
-  target: string,
-  current: string,
-  setEpoch(epoch : string): void,
-}
-
-const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
-  const c = "mx-1 p-2 cursor-pointer"
-
-  if (target == current) {
-    return <strong className={c}>{target}</strong>
-  }
-
-  return <button className={c} onClick={() => setEpoch(target)}>{target}</button>
-}
-
 const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, className?: string}) => {
   return (
     <button aria-label="Close"
@@ -107,7 +91,6 @@ const Panel = ({mark, close} : {mark: IMarker | null, close(): void}) => {
 }
 
 function App() {
-  const [epoch, setEpoch] = useState('antica')
   const [mark, setMark] = useState<IMarker|null>(null)
 
   const [year, setYear] = useState(2000);
@@ -128,7 +111,7 @@ function App() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {
-          markers[epoch].map((e, i) =>
+          markers['antica'].map((e, i) =>
             <Marker key={i} position={e.pos} eventHandlers={{
               click: _ => setMark(e)
             }}>
