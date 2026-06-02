@@ -80,26 +80,26 @@ function App() {
         maxBounds={bounds} center={[45.9544979, 12.6596338]}
         zoom={14} maxZoom={18} minZoom={10}
         scrollWheelZoom={true}
-	className="grow"
+        className="grow"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-	{
-	  markers[epoch].map((e, i) =>
-	    <Marker key={i} position={e.pos} eventHandlers={{
-	      click: _ => setMark(e)
-	    }}>
-	      {/* <Popup>{e.text}</Popup> */}
-	    </Marker>)
-	}
+        {
+          markers[epoch].map((e, i) =>
+            <Marker key={i} position={e.pos} eventHandlers={{
+              click: _ => setMark(e)
+            }}>
+              {/* <Popup>{e.text}</Popup> */}
+            </Marker>)
+        }
       </MapContainer>
 
       <div className="text-center p-3">
-	<EpochSelector target="antica" current={epoch} setEpoch={setEpoch} />
-	<EpochSelector target="moderna" current={epoch} setEpoch={setEpoch} />
-	<EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
+        <EpochSelector target="antica" current={epoch} setEpoch={setEpoch} />
+        <EpochSelector target="moderna" current={epoch} setEpoch={setEpoch} />
+        <EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
       </div>
 
       { mark != null && <Panel mark={mark} close={() => setMark(null)} /> }
