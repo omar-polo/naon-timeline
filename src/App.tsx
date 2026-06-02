@@ -6,36 +6,41 @@ import { useState } from 'react';
 
 interface IMarker {
   pos: LatLngExpression,
-  text: string,
+  title: string,
+  text?: string,
+  url?: string,
   image?: string,
 }
 
 const markers: Record<string, IMarker[]> = {
   antica: [{
     pos: [45.9676511,12.6818763],
-    text: "Torre",
+    title: "Torre",
   }, {
     pos: [45.9686511,12.6418763],
-    text: "punto a caso",
+    title: "Enea Ellero… dei Mille",
+    text: "“Lì di piazzale Ellero, vicino alle Gabelli”. Che sia un angolo suggestivo di Pordenone è indubbio: piazza Ellero Enea dei Mille, con il suo monumento ai caduti circondato da una florida cornice alberata, conserva tutto un fascino ricco di eleganza, rispetto e emozione, di un Novecento italiano legato alla memoria e al sacrificio di chi dette la vita per l’Italia.",
+    url: "https://www.loppure.it/enea-ellero-dei-mille/",
+    image: "https://www.loppure.it/wp-content/uploads/2026/05/Loppure-riunioni-direttivo-4.png",
   }, {
     pos: [45.9499511,12.6425763],
-    text: "punto a caso due",
+    title: "punto a caso due",
     image: "https://placehold.co/600x400?text=Punto+di+interesse",
   }],
-  moderna: [{
-    pos: [45.9545329, 12.6593973],
-    text: "municipio",
-  }, {
-    pos: [45.9666511,12.6516763],
-    text: "qualcosa di diverso",
-  }],
-  contemporanea: [{
-    pos: [45.9568299, 12.6657233],
-    text: "PAFF!"
-  }, {
-    pos: [45.9564299, 12.6543233],
-    text: "stazione"
-  }],
+  // moderna: [{
+  //   pos: [45.9545329, 12.6593973],
+  //   text: "municipio",
+  // }, {
+  //   pos: [45.9666511,12.6516763],
+  //   text: "qualcosa di diverso",
+  // }],
+  // contemporanea: [{
+  //   pos: [45.9568299, 12.6657233],
+  //   text: "PAFF!"
+  // }, {
+  //   pos: [45.9564299, 12.6543233],
+  //   text: "stazione"
+  // }],
 }
 
 interface IEpochSelector {
@@ -73,8 +78,10 @@ const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, classN
 const PanelBody = ({mark} : {mark: IMarker}) => {
   return (
     <>
-    { mark.image && <img src={mark.image} alt={"image for "+ mark.text} className="" /> }
-    <p>descrizione del punto: <br/> <em>{mark.text}</em></p>
+      { mark.image && <img src={mark.image} alt={"image for "+ mark.title} className="mb-4" /> }
+      <h3 className="text-xl text-center mb-4">{mark.title}</h3>
+      {mark.text && <p>{mark.text}</p>}
+      {mark.url  && <p className="mt-8"><a href={mark.url} target="_blank"><em>Per approfondire →</em></a></p>}
     </>
   )
 }
