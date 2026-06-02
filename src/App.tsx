@@ -54,14 +54,27 @@ const EpochSelector = ({target, current, setEpoch} : IEpochSelector) => {
   return <button className={c} onClick={() => setEpoch(target)}>{target}</button>
 }
 
-const Panel = ({mark, close} : {mark: IMarker, close(): void}) => {
+const PanelBody = ({mark} : {mark: IMarker}) => {
   return (
-    <div className="absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-9999"
-      onClick={_ => close()}>
-      <div className="bg-white h-full w-1/3 p-4"
-	onClick={e => e.stopPropagation()}>
-	{ mark.image && <img src={mark.image} alt={"image for "+ mark.text} className="" /> }
-	<p>descrizione del punto: <br/> <em>{mark.text}</em></p>
+    <>
+    { mark.image && <img src={mark.image} alt={"image for "+ mark.text} className="" /> }
+    <p>descrizione del punto: <br/> <em>{mark.text}</em></p>
+    </>
+  )
+}
+
+const Panel = ({mark, close} : {mark: IMarker, close(): void}) => {
+  const show = mark != null
+  return (
+    <div>
+      <div className={`absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-10000 ${!show && 'hidden'}`}
+        onClick={_ => close()}>
+      </div>
+      <div className={`absolute bottom-0 right-0 left-0 top-0 w-1/3 z-10100 bg-white p-4 transition-transform duration-300 ease-in-out ${show ? 'translate-0' : '-translate-x-full'}`}
+        onClick={_ => close()}>
+        <div onClick={e => e.stopPropagation()}>
+          { show && <PanelBody mark={mark} />}
+        </div>
       </div>
     </div>
   )
@@ -102,7 +115,7 @@ function App() {
         <EpochSelector target="contemporanea" current={epoch} setEpoch={setEpoch} />
       </div>
 
-      { mark != null && <Panel mark={mark} close={() => setMark(null)} /> }
+      <Panel mark={mark} close={() => setMark(null)} />
 
     </div>
   )
