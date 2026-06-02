@@ -10,7 +10,7 @@ interface IMarker {
   image?: string,
 }
 
-const markers: { [id: string] : [IMarker]; } = {
+const markers: Record<string, IMarker[]> = {
   antica: [{
     pos: [45.9676511,12.6818763],
     text: "Torre",
