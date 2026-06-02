@@ -1,10 +1,21 @@
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
-import { LatLngBounds, type LatLngExpression } from 'leaflet';
+import L, { LatLngBounds, type LatLngExpression } from 'leaflet';
 import { useState } from 'react';
 
 import YearStrip from "./YearStrip";
+
+// not sure i understand why, but it's needed for keeping the assets
+// @ts-ignore: Property
+delete L.Icon.Default.prototype._getIconUrl;
+
+// be explicit about asset paths
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: '/leaflet-images/marker-icon-2x.png',
+  iconUrl: '/leaflet-images/marker-icon.png',
+  shadowUrl: '/leaflet-images/marker-shadow.png',
+});
 
 interface IMarker {
   pos: LatLngExpression,
