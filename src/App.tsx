@@ -87,7 +87,7 @@ function App() {
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
   return (
-    <div className="w-screen h-screen flex flex-col">
+    <div className="w-screen h-dvh flex flex-col">
 
       <MapContainer
         maxBounds={bounds} center={[45.9544979, 12.6596338]}
