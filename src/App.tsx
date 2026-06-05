@@ -28,7 +28,10 @@ interface IMarker {
 const markers: Record<string, IMarker[]> = {
   antica: [{
     pos: [45.9676511,12.6818763],
-    title: "Torre",
+    title: "Pordenone e i suoi medici: secoli di cure, paura e innovazione",
+    text: "Per secoli, a Pordenone, ammalarsi significava affidarsi non solo alla scienza medica del tempo, ma anche alla carità, alla reputazione personale del medico e alla solidità delle casse comunali. Potremmo in un certo senso dire che la storia dei medici pordenonesi rappresenta il racconto di come una comunità abbia cercato, tra epidemie, povertà e trasformazioni sociali, di costruire un sistema sanitario moderno.",
+    url: "https://www.loppure.it/i-medici-di-pordenone/",
+    image: "https://www.loppure.it/wp-content/uploads/2026/05/Copilot_20260528_124338.png",
   }, {
     pos: [45.9686511,12.6418763],
     title: "Enea Ellero… dei Mille",
@@ -37,8 +40,10 @@ const markers: Record<string, IMarker[]> = {
     image: "https://www.loppure.it/wp-content/uploads/2026/05/Loppure-riunioni-direttivo-4.png",
   }, {
     pos: [45.9499511,12.6425763],
-    title: "punto a caso due",
-    image: "https://placehold.co/600x400?text=Punto+di+interesse",
+    title: "Palazzo del Fumetto: dove le vignette diventano mondo",
+    text: "Nel cuore di Pordenone sorge un luogo dove realtà e immaginazione si fondono: il Palazzo del Fumetto. Nato da una visione del 2013 e materializzatosi nel 2018 come PAFF! (Palazzo Arti Fumetto Friuli). Nato con l’ambizione di unire l’arte sequenziale alla valorizzazione del territorio, il progetto si è imposto rapidamente come una realtà fluida e in costante evoluzione, capace di trasformare il Friuli in un crocevia creativo. Il percorso ha raggiunto il suo culmine nel 2024, anno in cui l’istituzione ha assunto la denominazione attuale: Palazzo del Fumetto. Oggi, questo polo culturale non è più solo una scommessa vinta, ma un punto di riferimento internazionale.",
+    url: "https://www.loppure.it/palazzo-del-fumetto/",
+    image: "https://www.loppure.it/wp-content/uploads/2026/02/64c7264e-01b1-4f0e-9526-a11f58cef7a3.png",
   }],
   // moderna: [{
   //   pos: [45.9545329, 12.6593973],
