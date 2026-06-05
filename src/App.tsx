@@ -135,7 +135,7 @@ function App() {
         }
       </MapContainer>
 
-      <div className="text-center">
+      <div className="text-center select-none">
         <YearStrip
           value={year}
           onChange={setYear}
