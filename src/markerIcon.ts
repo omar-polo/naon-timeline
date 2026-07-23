@@ -12,7 +12,7 @@ function escapeHtml(s: string): string {
 }
 
 export function createEventIcon(event: TimelineEvent, isSelected: boolean): L.DivIcon {
-  const size = isSelected ? 14 : 10;
+  const size = isSelected ? 20 : 16;
   const dotStyle = [
     `width:${size}px`,
     `height:${size}px`,
