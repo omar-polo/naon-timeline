@@ -69,7 +69,7 @@ export default function YearRuler({
             </div>
             {showLabel && (
               <div
-                className="text-[9px]"
+                className="text-[11px]"
                 style={{
                   fontWeight: active ? 700 : 400,
                   color: active ? 'var(--color-accent)' : 'var(--color-muted)',

@@ -43,12 +43,12 @@ export default function ChipRail({
             }}
           >
             <span
-              className="text-[10px] font-bold"
+              className="text-[12px] font-bold"
               style={{ color: active ? 'var(--color-accent)' : 'var(--color-muted)' }}
             >
               {formatChipDate(e)}
             </span>
-            <span className="text-[11px] text-ink whitespace-nowrap overflow-hidden text-ellipsis">
+            <span className="text-[13px] text-ink whitespace-nowrap overflow-hidden text-ellipsis">
               {e.title}
             </span>
           </div>
