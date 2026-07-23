@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds } from 'leaflet';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 import eventsData from "./events.json";
 import type { TimelineEvent } from './types';
@@ -122,6 +122,29 @@ function App() {
     setPanelEventId(opts?.openPanel ? event.id : null);
   }
 
+  // Let the browser's back button close the panel instead of leaving the
+  // page: push a history entry when it opens, and let popstate be the only
+  // place that actually clears panelEventId (closePanel below just triggers
+  // that via history.back(), so the pushed entry never dangles).
+  const panelWasOpenRef = useRef(false);
+  useEffect(() => {
+    const isOpen = panelEventId != null;
+    if (isOpen && !panelWasOpenRef.current) {
+      window.history.pushState({ panelOpen: true }, '');
+    }
+    panelWasOpenRef.current = isOpen;
+  }, [panelEventId]);
+
+  useEffect(() => {
+    const onPopState = () => setPanelEventId(null);
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  function closePanel() {
+    if (panelEventId != null) window.history.back();
+  }
+
   return (
     <div className="w-screen h-dvh flex flex-col overflow-hidden">
       <Header year={selectedYear} count={yearEvents.length} />
@@ -158,7 +181,7 @@ function App() {
         onSelectEvent={(event) => selectEvent(event, { openPanel: true })}
       />
 
-      <Panel mark={panelEvent} close={() => setPanelEventId(null)} />
+      <Panel mark={panelEvent} close={closePanel} />
 
     </div>
   )
