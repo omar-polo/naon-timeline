@@ -109,7 +109,7 @@ const Panel = ({mark, close} : {mark: IMarker | null, close(): void}) => {
 function App() {
   const [mark, setMark] = useState<IMarker|null>(null)
 
-  const [year, setYear] = useState(2000);
+  const [year, setYear] = useState(1840);
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
@@ -139,9 +139,9 @@ function App() {
         <YearStrip
           value={year}
           onChange={setYear}
-          min={-100}
-          max={2000}
-          step={50}
+          min={1840}
+          max={1866}
+          step={1}
         />
       </div>
 
