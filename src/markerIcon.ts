@@ -3,7 +3,6 @@ import type { TimelineEvent } from './types';
 import { formatMarkerLabel } from './dates';
 
 const ACCENT = 'oklch(55% 0.16 250)';
-const ACCENT_GLOW = 'oklch(55% 0.16 250 / 0.18)';
 const NEUTRAL_DOT = 'oklch(55% 0.01 250 / 0.55)';
 const INK = 'oklch(20% 0.01 250)';
 
@@ -18,8 +17,7 @@ export function createEventIcon(event: TimelineEvent, isSelected: boolean): L.Di
     `height:${size}px`,
     'border-radius:50%',
     `background:${isSelected ? ACCENT : NEUTRAL_DOT}`,
-    `box-shadow:${isSelected ? `0 0 0 6px ${ACCENT_GLOW}` : 'none'}`,
-    'transition:all .15s',
+    'transition:background .15s',
   ].join(';');
 
   const label = isSelected
@@ -27,7 +25,7 @@ export function createEventIcon(event: TimelineEvent, isSelected: boolean): L.Di
     : '';
 
   return L.divIcon({
-    html: `<div style="${dotStyle}"></div>${label}`,
+    html: `<div class="${isSelected ? 'marker-pulse' : ''}" style="${dotStyle}"></div>${label}`,
     className: '',
     iconSize: [size, size],
     iconAnchor: [size / 2, size / 2],

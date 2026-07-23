@@ -10,3 +10,16 @@
   --color-accent-bg: oklch(90% 0.05 250);
   --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
+
+@keyframes marker-pulse {
+  0% {
+    box-shadow: 0 0 0 6px oklch(55% 0.16 250 / 0.18);
+  }
+  70%, 100% {
+    box-shadow: 0 0 0 14px oklch(55% 0.16 250 / 0);
+  }
+}
+
+.marker-pulse {
+  animation: marker-pulse 1.8s ease-out infinite;
+}
