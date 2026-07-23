@@ -155,7 +155,7 @@ function App() {
         yearEvents={yearEvents}
         selectedEventId={selectedEventId}
         onSelectYear={selectYear}
-        onSelectEvent={selectEvent}
+        onSelectEvent={(event) => selectEvent(event, { openPanel: true })}
       />
 
       <Panel mark={panelEvent} close={() => setPanelEventId(null)} />
