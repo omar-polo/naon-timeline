@@ -1,34 +1,55 @@
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
-import L, { LatLngBounds, type LatLngExpression } from 'leaflet';
-import { useState } from 'react';
+import { LatLngBounds } from 'leaflet';
+import { useMemo, useState } from 'react';
 
-import YearStrip from "./YearStrip";
 import eventsData from "./events.json";
+import type { TimelineEvent } from './types';
+import { compareEvents } from './dates';
+import { createEventIcon } from './markerIcon';
+import Header from './Header';
+import BottomBar from './BottomBar';
 
-// not sure i understand why, but it's needed for keeping the assets
-// @ts-ignore: Property
-delete L.Icon.Default.prototype._getIconUrl;
+const events = eventsData as TimelineEvent[];
 
-// be explicit about asset paths
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: '/leaflet-images/marker-icon-2x.png',
-  iconUrl: '/leaflet-images/marker-icon.png',
-  shadowUrl: '/leaflet-images/marker-shadow.png',
-});
+const YEAR_START = 1840;
+const YEAR_END = 1866;
+const YEARS = Array.from({ length: YEAR_END - YEAR_START + 1 }, (_, i) => YEAR_START + i);
 
-interface IMarker {
-  pos: LatLngExpression,
-  title: string,
-  date: string,
-  year: number,
-  text?: string,
-  url?: string,
-  image?: string,
+function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> {
+  const map = new Map<number, TimelineEvent[]>();
+  for (const e of evts) {
+    const list = map.get(e.year);
+    if (list) list.push(e);
+    else map.set(e.year, [e]);
+  }
+  for (const list of map.values()) list.sort(compareEvents);
+  return map;
 }
 
-const markers = eventsData as IMarker[];
+const EVENTS_BY_YEAR = buildEventsByYear(events);
+const COUNTS_BY_YEAR = new Map(YEARS.map((y) => [y, EVENTS_BY_YEAR.get(y)?.length ?? 0]));
+
+const EventMarker = ({
+  event,
+  isSelected,
+  onClick,
+}: {
+  event: TimelineEvent;
+  isSelected: boolean;
+  onClick: () => void;
+}) => {
+  const icon = useMemo(() => createEventIcon(event, isSelected), [event, isSelected]);
+  return (
+    <Marker
+      position={event.pos}
+      icon={icon}
+      zIndexOffset={isSelected ? 1000 : 0}
+      eventHandlers={{ click: onClick }}
+    />
+  );
+};
 
 const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, className?: string}) => {
   return (
@@ -46,7 +67,7 @@ const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, classN
   )
 }
 
-const PanelBody = ({mark} : {mark: IMarker}) => {
+const PanelBody = ({mark} : {mark: TimelineEvent}) => {
   return (
     <>
       { mark.image && <img src={mark.image} alt={"image for "+ mark.title} className="mb-4" /> }
@@ -58,15 +79,15 @@ const PanelBody = ({mark} : {mark: IMarker}) => {
   )
 }
 
-const Panel = ({mark, close} : {mark: IMarker | null, close(): void}) => {
+const Panel = ({mark, close} : {mark: TimelineEvent | null, close(): void}) => {
   const show = mark != null
   return (
     <div>
       <div className={`absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-10000 ${!show && 'hidden'}`}
-        onClick={_ => close()}>
+        onClick={() => close()}>
       </div>
       <div className={`absolute bottom-0 right-0 left-0 top-0 w-full md:w-2/3 lg:w-1/3 overflow-auto z-10100 bg-white transition-transform duration-300 ease-in-out ${show ? 'translate-0' : '-translate-x-full'}`}
-        onClick={_ => close()}>
+        onClick={() => close()}>
         <Close onClick={close} className="absolute right-4 top-4" />
         <div onClick={e => e.stopPropagation()} className="w-full h-full p-4 pt-17">
           { show && <PanelBody mark={mark} />}
@@ -77,45 +98,67 @@ const Panel = ({mark, close} : {mark: IMarker | null, close(): void}) => {
 }
 
 function App() {
-  const [mark, setMark] = useState<IMarker|null>(null)
-
-  const [year, setYear] = useState(1840);
+  const [selectedYear, setSelectedYear] = useState<number>(YEAR_START);
+  const [selectedEventId, setSelectedEventId] = useState<number | null>(
+    () => EVENTS_BY_YEAR.get(YEAR_START)?.[0]?.id ?? null
+  );
+  const [panelEventId, setPanelEventId] = useState<number | null>(null);
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
+  const yearEvents = EVENTS_BY_YEAR.get(selectedYear) ?? [];
+  const panelEvent = panelEventId != null ? events.find((e) => e.id === panelEventId) ?? null : null;
+
+  function selectYear(year: number) {
+    const evs = EVENTS_BY_YEAR.get(year) ?? [];
+    setSelectedYear(year);
+    setSelectedEventId(evs[0]?.id ?? null);
+    setPanelEventId(null);
+  }
+
+  function selectEvent(event: TimelineEvent, opts?: { openPanel?: boolean }) {
+    setSelectedYear(event.year);
+    setSelectedEventId(event.id);
+    setPanelEventId(opts?.openPanel ? event.id : null);
+  }
+
   return (
-    <div className="w-screen h-dvh flex flex-col">
+    <div className="w-screen h-dvh flex flex-col overflow-hidden">
+      <Header year={selectedYear} count={yearEvents.length} />
 
       <MapContainer
         maxBounds={bounds} center={[45.9544979, 12.6596338]}
         zoom={14} maxZoom={18} minZoom={10}
         scrollWheelZoom={true}
-        className="grow"
+        className="grow min-h-0"
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {
-          markers.filter(e => e.year === year).map((e, i) =>
-            <Marker key={i} position={e.pos} eventHandlers={{
-              click: _ => setMark(e)
-            }}/>
-          )
+          yearEvents.map((e) => (
+            <EventMarker
+              key={e.id}
+              event={e}
+              isSelected={e.id === selectedEventId}
+              onClick={() => selectEvent(e, { openPanel: true })}
+            />
+          ))
         }
       </MapContainer>
 
-      <div className="text-center select-none">
-        <YearStrip
-          value={year}
-          onChange={setYear}
-          min={1840}
-          max={1866}
-          step={1}
-        />
-      </div>
+      <BottomBar
+        years={YEARS}
+        countsByYear={COUNTS_BY_YEAR}
+        selectedYear={selectedYear}
+        yearEvents={yearEvents}
+        selectedEventId={selectedEventId}
+        onSelectYear={selectYear}
+        onSelectEvent={selectEvent}
+      />
 
-      <Panel mark={mark} close={() => setMark(null)} />
+      <Panel mark={panelEvent} close={() => setPanelEventId(null)} />
 
     </div>
   )

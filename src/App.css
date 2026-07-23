@@ -1,1 +1,12 @@
 @import "tailwindcss";
+
+@theme {
+  --color-ink: oklch(20% 0.01 250);
+  --color-muted: oklch(45% 0.01 250);
+  --color-neutral-bg: oklch(93% 0.005 250);
+  --color-neutral-dot: oklch(55% 0.01 250 / 0.6);
+  --color-border: oklch(90% 0.005 250);
+  --color-accent: oklch(55% 0.16 250);
+  --color-accent-bg: oklch(90% 0.05 250);
+  --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
