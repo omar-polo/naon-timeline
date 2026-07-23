@@ -50,8 +50,9 @@ const PanelBody = ({mark} : {mark: IMarker}) => {
   return (
     <>
       { mark.image && <img src={mark.image} alt={"image for "+ mark.title} className="mb-4" /> }
+      <p className="text-center text-gray-500 text-sm mb-1">{mark.date}</p>
       <h3 className="text-xl text-center mb-4">{mark.title}</h3>
-      {mark.text && <p>{mark.text}</p>}
+      {mark.text && mark.text.split("\n\n").map((paragraph, i) => <p key={i} className="mb-4">{paragraph}</p>)}
       {mark.url  && <p className="mt-8"><a href={mark.url} target="_blank"><em>Per approfondire →</em></a></p>}
     </>
   )
