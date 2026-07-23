@@ -20,46 +20,34 @@ L.Icon.Default.mergeOptions({
 interface IMarker {
   pos: LatLngExpression,
   title: string,
+  year: number,
   text?: string,
   url?: string,
   image?: string,
 }
 
-const markers: Record<string, IMarker[]> = {
-  antica: [{
-    pos: [45.9676511,12.6818763],
-    title: "Pordenone e i suoi medici: secoli di cure, paura e innovazione",
-    text: "Per secoli, a Pordenone, ammalarsi significava affidarsi non solo alla scienza medica del tempo, ma anche alla carità, alla reputazione personale del medico e alla solidità delle casse comunali. Potremmo in un certo senso dire che la storia dei medici pordenonesi rappresenta il racconto di come una comunità abbia cercato, tra epidemie, povertà e trasformazioni sociali, di costruire un sistema sanitario moderno.",
-    url: "https://www.loppure.it/i-medici-di-pordenone/",
-    image: "https://www.loppure.it/wp-content/uploads/2026/05/Copilot_20260528_124338.png",
-  }, {
-    pos: [45.9686511,12.6418763],
-    title: "Enea Ellero… dei Mille",
-    text: "“Lì di piazzale Ellero, vicino alle Gabelli”. Che sia un angolo suggestivo di Pordenone è indubbio: piazza Ellero Enea dei Mille, con il suo monumento ai caduti circondato da una florida cornice alberata, conserva tutto un fascino ricco di eleganza, rispetto e emozione, di un Novecento italiano legato alla memoria e al sacrificio di chi dette la vita per l’Italia.",
-    url: "https://www.loppure.it/enea-ellero-dei-mille/",
-    image: "https://www.loppure.it/wp-content/uploads/2026/05/Loppure-riunioni-direttivo-4.png",
-  }, {
-    pos: [45.9499511,12.6425763],
-    title: "Palazzo del Fumetto: dove le vignette diventano mondo",
-    text: "Nel cuore di Pordenone sorge un luogo dove realtà e immaginazione si fondono: il Palazzo del Fumetto. Nato da una visione del 2013 e materializzatosi nel 2018 come PAFF! (Palazzo Arti Fumetto Friuli). Nato con l’ambizione di unire l’arte sequenziale alla valorizzazione del territorio, il progetto si è imposto rapidamente come una realtà fluida e in costante evoluzione, capace di trasformare il Friuli in un crocevia creativo. Il percorso ha raggiunto il suo culmine nel 2024, anno in cui l’istituzione ha assunto la denominazione attuale: Palazzo del Fumetto. Oggi, questo polo culturale non è più solo una scommessa vinta, ma un punto di riferimento internazionale.",
-    url: "https://www.loppure.it/palazzo-del-fumetto/",
-    image: "https://www.loppure.it/wp-content/uploads/2026/02/64c7264e-01b1-4f0e-9526-a11f58cef7a3.png",
-  }],
-  // moderna: [{
-  //   pos: [45.9545329, 12.6593973],
-  //   text: "municipio",
-  // }, {
-  //   pos: [45.9666511,12.6516763],
-  //   text: "qualcosa di diverso",
-  // }],
-  // contemporanea: [{
-  //   pos: [45.9568299, 12.6657233],
-  //   text: "PAFF!"
-  // }, {
-  //   pos: [45.9564299, 12.6543233],
-  //   text: "stazione"
-  // }],
-}
+const markers: IMarker[] = [{
+  pos: [45.9676511,12.6818763],
+  title: "Pordenone e i suoi medici: secoli di cure, paura e innovazione",
+  year: 1849,
+  text: "Per secoli, a Pordenone, ammalarsi significava affidarsi non solo alla scienza medica del tempo, ma anche alla carità, alla reputazione personale del medico e alla solidità delle casse comunali. Potremmo in un certo senso dire che la storia dei medici pordenonesi rappresenta il racconto di come una comunità abbia cercato, tra epidemie, povertà e trasformazioni sociali, di costruire un sistema sanitario moderno.",
+  url: "https://www.loppure.it/i-medici-di-pordenone/",
+  image: "https://www.loppure.it/wp-content/uploads/2026/05/Copilot_20260528_124338.png",
+}, {
+  pos: [45.9686511,12.6418763],
+  title: "Enea Ellero… dei Mille",
+  year: 1860,
+  text: "“Lì di piazzale Ellero, vicino alle Gabelli”. Che sia un angolo suggestivo di Pordenone è indubbio: piazza Ellero Enea dei Mille, con il suo monumento ai caduti circondato da una florida cornice alberata, conserva tutto un fascino ricco di eleganza, rispetto e emozione, di un Novecento italiano legato alla memoria e al sacrificio di chi dette la vita per l’Italia.",
+  url: "https://www.loppure.it/enea-ellero-dei-mille/",
+  image: "https://www.loppure.it/wp-content/uploads/2026/05/Loppure-riunioni-direttivo-4.png",
+}, {
+  pos: [45.9499511,12.6425763],
+  title: "Palazzo del Fumetto: dove le vignette diventano mondo",
+  year: 1856,
+  text: "Nel cuore di Pordenone sorge un luogo dove realtà e immaginazione si fondono: il Palazzo del Fumetto. Nato da una visione del 2013 e materializzatosi nel 2018 come PAFF! (Palazzo Arti Fumetto Friuli). Nato con l’ambizione di unire l’arte sequenziale alla valorizzazione del territorio, il progetto si è imposto rapidamente come una realtà fluida e in costante evoluzione, capace di trasformare il Friuli in un crocevia creativo. Il percorso ha raggiunto il suo culmine nel 2024, anno in cui l’istituzione ha assunto la denominazione attuale: Palazzo del Fumetto. Oggi, questo polo culturale non è più solo una scommessa vinta, ma un punto di riferimento internazionale.",
+  url: "https://www.loppure.it/palazzo-del-fumetto/",
+  image: "https://www.loppure.it/wp-content/uploads/2026/02/64c7264e-01b1-4f0e-9526-a11f58cef7a3.png",
+}]
 
 const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, className?: string}) => {
   return (
@@ -127,7 +115,7 @@ function App() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {
-          markers['antica'].map((e, i) =>
+          markers.filter(e => e.year === year).map((e, i) =>
             <Marker key={i} position={e.pos} eventHandlers={{
               click: _ => setMark(e)
             }}/>
