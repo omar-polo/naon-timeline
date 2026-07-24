@@ -82,16 +82,10 @@ const PanelBody = ({mark} : {mark: TimelineEvent}) => {
 const Panel = ({mark, close} : {mark: TimelineEvent | null, close(): void}) => {
   const show = mark != null
   return (
-    <div>
-      <div className={`absolute bottom-0 right-0 left-0 top-0 bg-gray-900/60 z-10000 ${!show && 'hidden'}`}
-        onClick={() => close()}>
-      </div>
-      <div className={`absolute bottom-0 right-0 top-0 w-full md:w-2/3 lg:w-1/3 overflow-auto z-10100 bg-white transition-transform duration-300 ease-in-out ${show ? 'translate-0' : 'translate-x-full'}`}
-        onClick={() => close()}>
-        <Close onClick={close} className="absolute left-4 top-4" />
-        <div onClick={e => e.stopPropagation()} className="w-full min-h-full p-4 pt-17 pb-12">
-          { show && <PanelBody mark={mark} />}
-        </div>
+    <div className={`absolute bottom-0 right-0 top-0 w-full md:w-2/3 lg:w-1/3 overflow-auto z-10100 bg-white transition-transform duration-300 ease-in-out ${show ? 'translate-0' : 'translate-x-full'}`}>
+      <Close onClick={close} className="absolute left-4 top-4" />
+      <div className="w-full min-h-full p-4 pt-17 pb-12">
+        { show && <PanelBody mark={mark} />}
       </div>
     </div>
   )
