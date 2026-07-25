@@ -100,8 +100,7 @@ export default function YearStrip({
           <div
             key={year}
             data-year={year}
-            onClick={() => onSelectYear(year)}
-            className="flex-none cursor-pointer transition-all rounded-sm"
+            className="flex-none transition-all rounded-sm"
             style={{ width: 8, height: 30, background: 'var(--color-neutral-bg)' }}
           />
         );
