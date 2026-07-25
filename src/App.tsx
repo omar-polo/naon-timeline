@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
 import './App.css'
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds } from 'leaflet';
@@ -10,12 +10,15 @@ import { compareEvents } from './dates';
 import { createEventIcon } from './markerIcon';
 import Header from './Header';
 import BottomBar from './BottomBar';
+import DesktopPanel from './DesktopPanel';
+import MobileSheet from './MobileSheet';
 
 const events = eventsData as TimelineEvent[];
 
 const YEAR_START = 1840;
 const YEAR_END = 1866;
 const YEARS = Array.from({ length: YEAR_END - YEAR_START + 1 }, (_, i) => YEAR_START + i);
+const MOBILE_BREAKPOINT = 720;
 
 function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> {
   const map = new Map<number, TimelineEvent[]>();
@@ -51,119 +54,103 @@ const EventMarker = ({
   );
 };
 
-const Close = ({onClick: onclick, className: cn = ""} : {onClick(): void, className?: string}) => {
-  return (
-    <button aria-label="Close"
-      className={`p-2 bg-gray-200 hover:bg-gray-300 border border-solid border-gray-400 transition duration-300 rounded-full cursor-pointer ${cn}`}
-      onClick={onclick}
-    >
-      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24"
-        fill="none" stroke="currentColor" strokeWidth="2"
-        strokeLinecap="round" strokeLinejoin="round">
-        <line x1="18" y1="6" x2="6" y2="18" />
-        <line x1="6" y1="6" x2="18" y2="18" />
-      </svg>
-    </button>
-  )
-}
-
-const PanelBody = ({mark} : {mark: TimelineEvent}) => {
-  return (
-    <>
-      { mark.image && <img src={mark.image} alt={"image for "+ mark.title} className="mb-4" /> }
-      <p className="text-center text-gray-500 text-sm mb-1">{mark.date}</p>
-      <h3 className="text-xl text-center mb-4">{mark.title}</h3>
-      {mark.text && mark.text.split("\n\n").map((paragraph, i) => <p key={i} className="mb-4">{paragraph}</p>)}
-      {mark.url  && <p className="mt-8"><a href={mark.url} target="_blank"><em>Per approfondire →</em></a></p>}
-    </>
-  )
-}
-
-const Panel = ({mark, close} : {mark: TimelineEvent | null, close(): void}) => {
-  const show = mark != null
-  return (
-    <div className={`absolute bottom-0 right-0 top-0 w-full md:w-2/3 lg:w-1/3 overflow-auto z-10100 bg-white transition-transform duration-300 ease-in-out ${show ? 'translate-0' : 'translate-x-full'}`}>
-      <Close onClick={close} className="absolute left-4 top-4" />
-      <div className="w-full min-h-full p-4 pt-17 pb-12">
-        { show && <PanelBody mark={mark} />}
-      </div>
-    </div>
-  )
-}
+// The map's available width changes whenever the desktop side panel
+// mounts/unmounts or the mobile breakpoint flips, neither of which fires a
+// native `window resize` event that Leaflet listens for on its own.
+const MapResize = ({ dep }: { dep: unknown }) => {
+  const map = useMap();
+  useEffect(() => {
+    map.invalidateSize();
+  }, [map, dep]);
+  return null;
+};
 
 function App() {
   const [selectedYear, setSelectedYear] = useState<number>(YEAR_START);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(
     () => EVENTS_BY_YEAR.get(YEAR_START)?.[0]?.id ?? null
   );
-  const [panelEventId, setPanelEventId] = useState<number | null>(null);
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
   const yearEvents = EVENTS_BY_YEAR.get(selectedYear) ?? [];
-  const panelEvent = panelEventId != null ? events.find((e) => e.id === panelEventId) ?? null : null;
+  const selectedEvent = selectedEventId != null ? events.find((e) => e.id === selectedEventId) ?? null : null;
+
+  const showPanel = !isMobile && selectedEvent != null;
+  const showSheet = isMobile && sheetOpen && selectedEvent != null;
 
   function selectYear(year: number) {
     const evs = EVENTS_BY_YEAR.get(year) ?? [];
     setSelectedYear(year);
     setSelectedEventId(evs[0]?.id ?? null);
-    setPanelEventId(null);
   }
 
-  function selectEvent(event: TimelineEvent, opts?: { openPanel?: boolean }) {
+  function selectEvent(event: TimelineEvent) {
     setSelectedYear(event.year);
     setSelectedEventId(event.id);
-    setPanelEventId(opts?.openPanel ? event.id : null);
+    setSheetOpen(true);
   }
 
-  // Let the browser's back button close the panel instead of leaving the
+  // Let the browser's back button close the sheet instead of leaving the
   // page: push a history entry when it opens, and let popstate be the only
-  // place that actually clears panelEventId (closePanel below just triggers
+  // place that actually clears sheetOpen (closeSheet below just triggers
   // that via history.back(), so the pushed entry never dangles).
-  const panelWasOpenRef = useRef(false);
+  const sheetWasOpenRef = useRef(false);
   useEffect(() => {
-    const isOpen = panelEventId != null;
-    if (isOpen && !panelWasOpenRef.current) {
-      window.history.pushState({ panelOpen: true }, '');
+    if (showSheet && !sheetWasOpenRef.current) {
+      window.history.pushState({ sheetOpen: true }, '');
     }
-    panelWasOpenRef.current = isOpen;
-  }, [panelEventId]);
+    sheetWasOpenRef.current = showSheet;
+  }, [showSheet]);
 
   useEffect(() => {
-    const onPopState = () => setPanelEventId(null);
+    const onPopState = () => setSheetOpen(false);
     window.addEventListener('popstate', onPopState);
     return () => window.removeEventListener('popstate', onPopState);
   }, []);
 
-  function closePanel() {
-    if (panelEventId != null) window.history.back();
+  function closeSheet() {
+    window.history.back();
   }
 
   return (
     <div className="relative w-screen h-dvh flex flex-col overflow-hidden">
       <Header year={selectedYear} count={yearEvents.length} />
 
-      <MapContainer
-        maxBounds={bounds} center={[45.9544979, 12.6596338]}
-        zoom={14} maxZoom={18} minZoom={10}
-        scrollWheelZoom={true}
-        className="grow min-h-0"
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-        {
-          yearEvents.map((e) => (
-            <EventMarker
-              key={e.id}
-              event={e}
-              isSelected={e.id === selectedEventId}
-              onClick={() => selectEvent(e, { openPanel: true })}
-            />
-          ))
-        }
-      </MapContainer>
+      <div className="relative flex-1 min-h-0 flex overflow-hidden">
+        <MapContainer
+          maxBounds={bounds} center={[45.9544979, 12.6596338]}
+          zoom={14} maxZoom={18} minZoom={10}
+          scrollWheelZoom={true}
+          className="flex-1 min-h-0"
+        >
+          <MapResize dep={showPanel} />
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          {
+            yearEvents.map((e) => (
+              <EventMarker
+                key={e.id}
+                event={e}
+                isSelected={e.id === selectedEventId}
+                onClick={() => selectEvent(e)}
+              />
+            ))
+          }
+        </MapContainer>
+
+        {showPanel && selectedEvent && <DesktopPanel event={selectedEvent} />}
+      </div>
 
       <BottomBar
         years={YEARS}
@@ -172,11 +159,10 @@ function App() {
         yearEvents={yearEvents}
         selectedEventId={selectedEventId}
         onSelectYear={selectYear}
-        onSelectEvent={(event) => selectEvent(event, { openPanel: true })}
+        onSelectEvent={selectEvent}
       />
 
-      <Panel mark={panelEvent} close={closePanel} />
-
+      {showSheet && selectedEvent && <MobileSheet event={selectedEvent} onClose={closeSheet} />}
     </div>
   )
 }
