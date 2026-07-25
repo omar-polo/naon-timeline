@@ -99,6 +99,10 @@ function App() {
     setSheetOpen(true);
   }
 
+  function deselectEvent() {
+    setSelectedEventId(null);
+  }
+
   // Let the browser's back button close the sheet instead of leaving the
   // page: push a history entry when it opens, and let popstate be the only
   // place that actually clears sheetOpen (closeSheet below just triggers
@@ -149,7 +153,7 @@ function App() {
           }
         </MapContainer>
 
-        {showPanel && selectedEvent && <DesktopPanel event={selectedEvent} />}
+        {showPanel && selectedEvent && <DesktopPanel event={selectedEvent} onClose={deselectEvent} />}
       </div>
 
       <BottomBar
