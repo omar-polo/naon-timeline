@@ -47,14 +47,15 @@ export default function YearStrip({
         const count = countsByYear.get(year) ?? 0;
 
         if (active) {
+          const width = Math.max(34, Math.min(26 + count * 22, 150));
           return (
             <div
               key={year}
               data-year={year}
               onClick={() => onSelectYear(year)}
-              className="flex-1 flex items-center justify-around rounded cursor-pointer transition-all"
+              className="flex-none flex items-center justify-around gap-s4 px-4 rounded cursor-pointer transition-all"
               style={{
-                minWidth: 34,
+                width,
                 height: 30,
                 background: 'var(--color-accent-bg)',
                 boxShadow: 'inset 0 0 0 1.5px var(--color-accent)',
@@ -71,8 +72,8 @@ export default function YearStrip({
                     }}
                     className="rounded-full cursor-pointer"
                     style={{
-                      width: isSelectedEvent ? 7 : 5,
-                      height: isSelectedEvent ? 7 : 5,
+                      width: isSelectedEvent ? 10 : 8,
+                      height: isSelectedEvent ? 10 : 8,
                       background: isSelectedEvent ? 'var(--color-accent)' : 'var(--color-neutral-dot)',
                     }}
                   />
