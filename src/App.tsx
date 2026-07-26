@@ -150,6 +150,8 @@ function App() {
         </MapContainer>
 
         {showPanel && selectedEvent && <DesktopPanel event={selectedEvent} onClose={deselectEvent} />}
+
+        {showSheet && selectedEvent && <MobileSheet event={selectedEvent} onClose={closeSheet} />}
       </div>
 
       <BottomBar
@@ -159,8 +161,6 @@ function App() {
         selectedEventId={selectedEventId}
         onSelectEvent={selectEvent}
       />
-
-      {showSheet && selectedEvent && <MobileSheet event={selectedEvent} onClose={closeSheet} />}
     </div>
   )
 }
