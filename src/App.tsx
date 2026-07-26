@@ -16,8 +16,6 @@ import MobileSheet from './MobileSheet';
 const events = eventsData as TimelineEvent[];
 
 const YEAR_START = 1840;
-const YEAR_END = 1866;
-const YEARS = Array.from({ length: YEAR_END - YEAR_START + 1 }, (_, i) => YEAR_START + i);
 const MOBILE_BREAKPOINT = 720;
 
 function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> {
@@ -32,7 +30,6 @@ function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> 
 }
 
 const EVENTS_BY_YEAR = buildEventsByYear(events);
-const COUNTS_BY_YEAR = new Map(YEARS.map((y) => [y, EVENTS_BY_YEAR.get(y)?.length ?? 0]));
 
 const EventMarker = ({
   event,
@@ -87,16 +84,15 @@ function App() {
   const showPanel = !isMobile && selectedEvent != null;
   const showSheet = isMobile && sheetOpen && selectedEvent != null;
 
-  function selectYear(year: number) {
-    const evs = EVENTS_BY_YEAR.get(year) ?? [];
-    setSelectedYear(year);
-    setSelectedEventId(evs[0]?.id ?? null);
-  }
-
-  function selectEvent(event: TimelineEvent) {
+  function selectEvent(event: TimelineEvent, opts?: { openSheet?: boolean }) {
     setSelectedYear(event.year);
     setSelectedEventId(event.id);
-    setSheetOpen(true);
+    // Gesture-driven selection (scrolling/dragging/arrow-keying through the
+    // strip) stays lightweight - opening the full-screen mobile sheet on
+    // every step would block further interaction with the strip beneath
+    // its scrim. Only an explicit action (tapping a dot, tapping a marker)
+    // opens it.
+    if (opts?.openSheet) setSheetOpen(true);
   }
 
   function deselectEvent() {
@@ -147,7 +143,7 @@ function App() {
                 key={e.id}
                 event={e}
                 isSelected={e.id === selectedEventId}
-                onClick={() => selectEvent(e)}
+                onClick={() => selectEvent(e, { openSheet: true })}
               />
             ))
           }
@@ -157,12 +153,10 @@ function App() {
       </div>
 
       <BottomBar
-        years={YEARS}
-        countsByYear={COUNTS_BY_YEAR}
+        events={events}
         selectedYear={selectedYear}
         yearEvents={yearEvents}
         selectedEventId={selectedEventId}
-        onSelectYear={selectYear}
         onSelectEvent={selectEvent}
       />
 

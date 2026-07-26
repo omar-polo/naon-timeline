@@ -3,21 +3,17 @@ import { formatChipDate } from './dates';
 import YearStrip from './YearStrip';
 
 export default function BottomBar({
-  years,
-  countsByYear,
+  events,
   selectedYear,
   yearEvents,
   selectedEventId,
-  onSelectYear,
   onSelectEvent,
 }: {
-  years: number[];
-  countsByYear: Map<number, number>;
+  events: TimelineEvent[];
   selectedYear: number;
   yearEvents: TimelineEvent[];
   selectedEventId: number | null;
-  onSelectYear: (year: number) => void;
-  onSelectEvent: (event: TimelineEvent) => void;
+  onSelectEvent: (event: TimelineEvent, opts?: { openSheet?: boolean }) => void;
 }) {
   const hasEvents = yearEvents.length > 0;
   const selectedEvent = yearEvents.find((e) => e.id === selectedEventId);
@@ -29,12 +25,8 @@ export default function BottomBar({
       </div>
 
       <YearStrip
-        years={years}
-        countsByYear={countsByYear}
-        selectedYear={selectedYear}
-        yearEvents={yearEvents}
+        events={events}
         selectedEventId={selectedEventId}
-        onSelectYear={onSelectYear}
         onSelectEvent={onSelectEvent}
       />
 
