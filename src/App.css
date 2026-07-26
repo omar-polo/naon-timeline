@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: oklch(20% 0.01 250);
-  --color-muted: oklch(45% 0.01 250);
-  --color-neutral-bg: oklch(93% 0.005 250);
-  --color-neutral-dot: oklch(55% 0.01 250 / 0.6);
-  --color-border: oklch(90% 0.005 250);
-  --color-accent: oklch(55% 0.16 250);
-  --color-accent-bg: oklch(90% 0.05 250);
+  --color-ink: oklch(30% 0.02 50);
+  --color-muted: oklch(45% 0.02 50);
+  --color-neutral-bg: oklch(92% 0.015 70);
+  --color-neutral-dot: oklch(65% 0.03 60 / 0.7);
+  --color-border: oklch(88% 0.02 70);
+  --color-accent: oklch(58% 0.15 40);
+  --color-accent-bg: oklch(90% 0.06 45);
+  --color-page: oklch(97% 0.02 80);
+  --color-panel: oklch(98% 0.012 80);
   --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 @keyframes marker-pulse {
   0% {
-    box-shadow: 0 0 0 6px oklch(55% 0.16 250 / 0.18);
+    box-shadow: 0 0 0 6px oklch(58% 0.15 40 / 0.18);
   }
   70%, 100% {
-    box-shadow: 0 0 0 14px oklch(55% 0.16 250 / 0);
+    box-shadow: 0 0 0 14px oklch(58% 0.15 40 / 0);
   }
 }
 

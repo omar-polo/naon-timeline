@@ -19,7 +19,7 @@ export default function BottomBar({
   const selectedEvent = yearEvents.find((e) => e.id === selectedEventId);
 
   return (
-    <div className="flex-none bg-white border-t border-border flex flex-col gap-2 pt-2.5 pb-4">
+    <div className="flex-none bg-panel border-t border-border flex flex-col gap-2 pt-2.5 pb-4">
       <div className="px-4 text-[10px] text-muted">
         {selectedYear} · {hasEvents ? 'tocca un punto per selezionare' : 'nessun evento registrato'}
       </div>

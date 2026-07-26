@@ -122,7 +122,7 @@ function App() {
   }
 
   return (
-    <div className="relative w-screen h-dvh flex flex-col overflow-hidden">
+    <div className="relative w-screen h-dvh flex flex-col overflow-hidden bg-page">
       <Header year={selectedYear} count={yearEvents.length} />
 
       <div className="relative flex-1 min-h-0 flex overflow-hidden">
