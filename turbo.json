@@ -10,6 +10,13 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
+    "openapi": {
+      "outputs": ["openapi.json"]
+    },
+    "@naon-timeline/api-client#build": {
+      "dependsOn": ["@naon-timeline/backend#openapi"],
+      "outputs": ["src/schema.ts"]
+    },
     "lint": {
       "dependsOn": ["^lint"]
     },

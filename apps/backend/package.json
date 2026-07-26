@@ -1,0 +1,11 @@
+{
+  "name": "@naon-timeline/backend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "find . -name '*.go' | entr -rn go run ./cmd/server",
+    "build": "go build -o dist/server ./cmd/server",
+    "openapi": "go run ./cmd/genspec",
+    "lint": "go vet ./... && test -z \"$(gofmt -l .)\""
+  }
+}
