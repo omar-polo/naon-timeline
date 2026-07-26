@@ -1,17 +1,19 @@
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
-import './App.css'
+import { MapContainer, TileLayer, useMap } from 'react-leaflet'
+import '@naon-timeline/ui/theme.css'
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds } from 'leaflet';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import eventsData from "./events.json";
-import type { TimelineEvent } from './types';
-import { compareEvents } from './dates';
-import { createEventIcon } from './markerIcon';
-import Header from './Header';
-import BottomBar from './BottomBar';
-import DesktopPanel from './DesktopPanel';
-import MobileSheet from './MobileSheet';
+import {
+  type TimelineEvent,
+  compareEvents,
+  Header,
+  BottomBar,
+  DesktopPanel,
+  MobileSheet,
+  EventMarker,
+} from '@naon-timeline/ui';
 
 const events = eventsData as TimelineEvent[];
 
@@ -30,26 +32,6 @@ function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> 
 }
 
 const EVENTS_BY_YEAR = buildEventsByYear(events);
-
-const EventMarker = ({
-  event,
-  isSelected,
-  onClick,
-}: {
-  event: TimelineEvent;
-  isSelected: boolean;
-  onClick: () => void;
-}) => {
-  const icon = useMemo(() => createEventIcon(event, isSelected), [event, isSelected]);
-  return (
-    <Marker
-      position={event.pos}
-      icon={icon}
-      zIndexOffset={isSelected ? 1000 : 0}
-      eventHandlers={{ click: onClick }}
-    />
-  );
-};
 
 // The map's available width changes whenever the desktop side panel
 // mounts/unmounts or the mobile breakpoint flips, neither of which fires a

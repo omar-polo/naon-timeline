@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+/* Tailwind's automatic content detection ignores anything reached through
+   node_modules, which is how consuming apps see this package (pnpm
+   symlinks workspace packages there) - opt this directory back in
+   explicitly so classes used in the components living alongside this
+   file are still generated. */
+@source ".";
+
 @theme {
   --color-ink: oklch(30% 0.02 50);
   --color-muted: oklch(45% 0.02 50);
