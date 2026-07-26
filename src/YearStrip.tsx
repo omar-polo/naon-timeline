@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import type { TimelineEvent } from './types';
 
-const STEP_WIDTH = 40;
+const STEP_WIDTH = 64;
 // Fixed width for a year that isn't the current one - it shows just its
 // year number, not its individual events, regardless of how many it has.
-const COLLAPSED_WIDTH = 34;
+const COLLAPSED_WIDTH = 58;
 // Steps rendered on each side of the current one. Only this small window
 // ever touches the DOM, regardless of how many events/years exist overall -
 // this is what lets the strip stay cheap at a millennium's worth of data.
@@ -189,7 +189,7 @@ export default function YearStrip({
   return (
     <div
       ref={containerRef}
-      className="relative h-[46px] overflow-hidden select-none outline-none"
+      className="relative h-[56px] overflow-hidden select-none outline-none"
       style={{ touchAction: 'none', cursor: isDragging ? 'grabbing' : 'grab' }}
       tabIndex={0}
       role="slider"
@@ -221,7 +221,7 @@ export default function YearStrip({
                 key={key}
                 onClick={() => onSelectEvent(group.events[0], { openSheet: true })}
                 className="flex-none flex items-center justify-center rounded cursor-pointer transition-all"
-                style={{ width: group.width, height: 30, background: 'var(--color-neutral-bg)' }}
+                style={{ width: group.width, height: 40, background: 'var(--color-neutral-bg)' }}
               >
                 <span className="text-[11px] text-muted">{group.year}</span>
               </div>
@@ -234,7 +234,7 @@ export default function YearStrip({
               className="flex items-center justify-around rounded transition-all"
               style={{
                 width: group.width,
-                height: 30,
+                height: 40,
                 background: 'var(--color-accent-bg)',
                 boxShadow: 'inset 0 0 0 1.5px var(--color-accent)',
               }}
@@ -246,7 +246,7 @@ export default function YearStrip({
                     key={event.id}
                     onClick={() => onSelectEvent(event, { openSheet: true })}
                     className="flex-none flex items-center justify-center cursor-pointer"
-                    style={{ width: STEP_WIDTH, height: 30 }}
+                    style={{ width: STEP_WIDTH, height: 40 }}
                   >
                     <div
                       className="rounded-full transition-all"
