@@ -1,6 +1,10 @@
-package backend
+package api
 
 import "github.com/go-fuego/fuego"
+
+type (
+	NoBody = fuego.ContextNoBody
+)
 
 // NewServer builds the fuego server with all routes registered. Both
 // cmd/server and cmd/genspec call this so the generated OpenAPI spec can
@@ -24,6 +28,6 @@ type StatusResponse struct {
 	Ok bool `json:"ok"`
 }
 
-func status(c fuego.ContextNoBody) (StatusResponse, error) {
+func status(ctx NoBody) (StatusResponse, error) {
 	return StatusResponse{Ok: true}, nil
 }

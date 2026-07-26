@@ -3,9 +3,9 @@
 // "openapi" turbo task to feed the TypeScript codegen step.
 package main
 
-import backend "github.com/omar-polo/naon-timeline/apps/backend"
+import "github.com/omar-polo/naon-timeline/apps/backend/api/v1"
 
 func main() {
-	s := backend.NewServer()
+	s := api.NewServer()
 	s.OutputOpenAPISpec()
 }
