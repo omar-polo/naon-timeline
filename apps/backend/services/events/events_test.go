@@ -2,6 +2,7 @@ package events
 
 import (
 	"testing"
+	"time"
 
 	bt "github.com/omar-polo/naon-timeline/apps/backend/testing"
 	"github.com/stretchr/testify/require"
@@ -19,10 +20,7 @@ func TestEvents(t *testing.T) {
 		newevt := &Event{
 			Draft: true,
 			Title: "Test",
-			Date:  "01/01/01",
-			Year:  1,
-			Month: 1,
-			Day:   1,
+			Date:  time.Date(2001, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Text:  "content",
 		}
 		newevt, err := New(conn, newevt)
@@ -49,10 +47,7 @@ func TestEvents(t *testing.T) {
 		newevt := &Event{
 			Draft: true,
 			Title: "Test",
-			Date:  "01/01/01",
-			Year:  1,
-			Month: 1,
-			Day:   1,
+			Date:  time.Date(2001, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Text:  "content",
 		}
 		newevt, err = New(conn, newevt)
@@ -81,10 +76,7 @@ func TestEvents(t *testing.T) {
 		newevt := &Event{
 			Draft: true,
 			Title: "Test",
-			Date:  "01/01/01",
-			Year:  1,
-			Month: 1,
-			Day:   1,
+			Date:  time.Date(2001, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Text:  "content",
 		}
 		newevt, err := New(conn, newevt)
@@ -112,10 +104,7 @@ func TestEvents(t *testing.T) {
 		newevt := &Event{
 			Draft: true,
 			Title: "Test",
-			Date:  "01/01/01",
-			Year:  1,
-			Month: 1,
-			Day:   1,
+			Date:  time.Date(2001, time.January, 1, 0, 0, 0, 0, time.UTC),
 			Text:  "content",
 		}
 		newevt, err := New(conn, newevt)
