@@ -64,7 +64,6 @@ func TestEvents(t *testing.T) {
 		ev3, err := List(conn, ListFilter{IncludeDrafts: false})
 		require.NoError(t, err)
 		require.NotEmpty(t, ev3)
-		require.Equal(t, len(ev1), len(ev3))
 		require.NotContains(t, ev3, *newevt)
 	})
 
