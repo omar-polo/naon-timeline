@@ -210,6 +210,7 @@ export default function EventFormPage(props: Props) {
                   <NumberField
                     value={field.state.value}
                     onChange={field.handleChange}
+                    formatOptions={{ maximumFractionDigits: 6 }}
                     className="flex flex-1 flex-col gap-1.5 text-xs text-muted"
                   >
                     <Label>Lat</Label>
@@ -222,6 +223,7 @@ export default function EventFormPage(props: Props) {
                   <NumberField
                     value={field.state.value}
                     onChange={field.handleChange}
+                    formatOptions={{ maximumFractionDigits: 6 }}
                     className="flex flex-1 flex-col gap-1.5 text-xs text-muted"
                   >
                     <Label>Lng</Label>
