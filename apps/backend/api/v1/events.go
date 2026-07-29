@@ -10,11 +10,9 @@ import (
 type Event = events.Event
 
 func (s *Server) eventsList(fc NoBody) ([]Event, error) {
-	var includeDrafts bool
-	if id, err := fc.QueryParamBoolErr("include-drafts"); err != nil {
-		return nil, err
-	} else {
-		includeDrafts = id
+	includeDrafts, err := boolparam(fc, "include-drafts")
+	if err != nil {
+		return nil, fuego.BadRequestError{}
 	}
 
 	conn, err := s.pool.Take(fc)
