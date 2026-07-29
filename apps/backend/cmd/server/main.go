@@ -16,6 +16,7 @@ var (
 func main() {
 	flag.StringVar(&addr, "addr", addr, `address where to listen to`)
 	flag.StringVar(&ldb, "db", ldb, `database to use`)
+	flag.Parse()
 
 	pool, err := db.Open(ldb)
 	if err != nil {
