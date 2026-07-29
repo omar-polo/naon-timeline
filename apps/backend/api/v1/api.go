@@ -57,6 +57,13 @@ func NewServer(pool *sqlitex.Pool) *Server {
 	return server
 }
 
+func (s *Server) Close() error {
+	if s.pool != nil {
+		return s.pool.Close()
+	}
+	return nil
+}
+
 type StatusResponse struct {
 	Ok bool `json:"ok"`
 }
