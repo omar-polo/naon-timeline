@@ -40,6 +40,9 @@ func NewServer(pool *sqlitex.Pool) *Server {
 
 	fuego.Get(public, "/{$}", server.status)
 
+	fuego.Get(public, "/info", server.info,
+		fuego.OptionDescription("Retrieve some stats"))
+
 	fuego.Get(public, "/events", server.eventsList,
 		fuego.OptionQuery("include-drafts", "Include drafts events",
 			fuego.ParamBool()),
