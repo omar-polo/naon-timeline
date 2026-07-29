@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import mockUsers from '../data/mockUsers';
 import mockEvents from '../data/mockEvents';
-import type { Event, EventFilters, ModalState, User } from '../types';
+import type { EventFilters, ModalState, User } from '../types';
 import { useToast } from '@naon-timeline/ui';
 import { DashboardContext, type DashboardContextValue } from './dashboardContextInstance';
 
@@ -9,7 +9,7 @@ let uid = 100;
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(mockUsers);
-  const [events, setEvents] = useState<Event[]>(mockEvents);
+  const events = mockEvents;
   const [modal, setModal] = useState<ModalState | null>(null);
   const [eventFilters, setEventFiltersState] = useState<EventFilters>({
     search: '',
@@ -26,6 +26,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       modal,
       eventFilters,
       toast,
+      showToast,
       openModal: (m) => setModal(m),
       closeModal: () => setModal(null),
       setEventFilters: (patch) => setEventFiltersState((f) => ({ ...f, ...patch })),
@@ -55,20 +56,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       resetPassword: () => {
         setModal(null);
         showToast('Password reset');
-      },
-      createEvent: (input) => {
-        const newEvent: Event = { ...input, id: ++uid };
-        setEvents((es) => [...es, newEvent]);
-        showToast('Event created');
-      },
-      updateEvent: (id, patch) => {
-        setEvents((es) => es.map((e) => (e.id === id ? { ...patch, id } : e)));
-        showToast('Event updated');
-      },
-      deleteEvent: (id) => {
-        setEvents((es) => es.filter((e) => e.id !== id));
-        setModal(null);
-        showToast('Deleted');
       },
       downloadBackup: () => {
         showToast('Backup downloaded');

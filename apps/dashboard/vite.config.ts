@@ -8,4 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    // the backend (apps/backend) doesn't set CORS headers - proxy same-origin
+    // in dev instead of adding a wildcard header to a server that shouldn't
+    // need to know about the dashboard's origin.
+    proxy: {
+      '/api': 'http://localhost:8080',
+    },
+  },
 })

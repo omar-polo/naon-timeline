@@ -3,10 +3,14 @@ import { useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { TextField, TextArea, Label, Input, FieldError, Checkbox, NumberField } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
+import useEvent from '../../queries/useEvent';
+import useCreateEvent from '../../queries/useCreateEvent';
+import useUpdateEvent from '../../queries/useUpdateEvent';
 import useIsMobile from '../layout/useIsMobile';
 import { Button } from '@naon-timeline/ui';
 import EventMapPicker from './EventMapPicker';
 import { findAddress, MAP_CENTER } from '../../lib/geo';
+import type { Event } from '../../types';
 
 type Props = { mode: 'create' } | { mode: 'edit'; eventId: string };
 
@@ -22,13 +26,27 @@ const EMPTY_FORM = {
 };
 
 export default function EventFormPage(props: Props) {
-  const { events, createEvent, updateEvent, openModal } = useDashboard();
+  const eventId = props.mode === 'edit' ? props.eventId : undefined;
+  const { data: editingEvent, isLoading, error } = useEvent(eventId);
+
+  if (props.mode === 'edit' && isLoading) {
+    return <p className="text-[13px] text-muted">Loading event…</p>;
+  }
+  if (props.mode === 'edit' && error) {
+    return <p className="text-[13px] text-danger">Couldn&apos;t load event: {error.message}</p>;
+  }
+
+  return <EventForm mode={props.mode} editingEvent={editingEvent ?? null} />;
+}
+
+function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEvent: Event | null }) {
+  const { showToast, openModal } = useDashboard();
+  const createEventMutation = useCreateEvent();
+  const updateEventMutation = useUpdateEvent();
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const [addressQuery, setAddressQuery] = useState('');
   const [addressNote, setAddressNote] = useState('');
-
-  const editingEvent = props.mode === 'edit' ? events.find((e) => String(e.id) === props.eventId) : null;
 
   const form = useForm({
     defaultValues: editingEvent
@@ -44,12 +62,26 @@ export default function EventFormPage(props: Props) {
         }
       : EMPTY_FORM,
     onSubmit: ({ value }) => {
-      if (props.mode === 'create') {
-        createEvent(value);
+      if (mode === 'create') {
+        createEventMutation.mutate(value, {
+          onSuccess: () => {
+            showToast('Event created');
+            navigate({ to: '/events' });
+          },
+          onError: () => showToast('Failed to create event'),
+        });
       } else if (editingEvent) {
-        updateEvent(editingEvent.id, value);
+        updateEventMutation.mutate(
+          { ...value, id: editingEvent.id },
+          {
+            onSuccess: () => {
+              showToast('Event updated');
+              navigate({ to: '/events' });
+            },
+            onError: () => showToast('Failed to update event'),
+          },
+        );
       }
-      navigate({ to: '/events' });
     },
   });
 
@@ -255,7 +287,13 @@ export default function EventFormPage(props: Props) {
             <Button variant="ghost" onPress={() => navigate({ to: '/events' })}>
               Cancel
             </Button>
-            <Button type="submit">{props.mode === 'create' ? 'Create event' : 'Save changes'}</Button>
+            <Button type="submit" isDisabled={createEventMutation.isPending || updateEventMutation.isPending}>
+              {createEventMutation.isPending || updateEventMutation.isPending
+                ? 'Saving…'
+                : mode === 'create'
+                  ? 'Create event'
+                  : 'Save changes'}
+            </Button>
           </div>
         </div>
       </form>

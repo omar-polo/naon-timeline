@@ -7,6 +7,7 @@ export interface DashboardContextValue {
   modal: ModalState | null;
   eventFilters: EventFilters;
   toast: string | null;
+  showToast: (message: string) => void;
   openModal: (modal: ModalState) => void;
   closeModal: () => void;
   setEventFilters: (patch: Partial<EventFilters>) => void;
@@ -14,9 +15,6 @@ export interface DashboardContextValue {
   updateUser: (id: number, patch: { name: string; role: Role }) => void;
   deleteUser: (id: number) => void;
   resetPassword: (id: number, password: string) => void;
-  createEvent: (input: Omit<Event, 'id'>) => void;
-  updateEvent: (id: number, patch: Omit<Event, 'id'>) => void;
-  deleteEvent: (id: number) => void;
   downloadBackup: () => void;
 }
 
