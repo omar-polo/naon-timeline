@@ -10,8 +10,12 @@
   },
   "dependencies": {
     "@naon-timeline/ui": "workspace:*",
+    "@tanstack/react-form": "^1.33.2",
+    "@tanstack/react-router": "^1.170.18",
+    "@tanstack/react-table": "^8.21.3",
     "leaflet": "^1.9.4",
     "react": "^19.2.7",
+    "react-aria-components": "^1.19.0",
     "react-dom": "^19.2.7",
     "react-leaflet": "^5.0.0"
   },

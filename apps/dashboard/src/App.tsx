@@ -1,7 +1,12 @@
+import '@naon-timeline/ui/theme.css';
+import { RouterProvider } from '@tanstack/react-router';
+import { router } from './router';
+import { DashboardProvider } from './state/DashboardContext';
+
 export default function App() {
   return (
-    <div className="flex h-dvh items-center justify-center">
-      <h1 className="text-2xl font-semibold text-gray-800">Hello, world!</h1>
-    </div>
+    <DashboardProvider>
+      <RouterProvider router={router} />
+    </DashboardProvider>
   );
 }

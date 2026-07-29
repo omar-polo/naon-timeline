@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 import '@naon-timeline/ui/theme.css';
 import 'leaflet/dist/leaflet.css';
+import '../../dashboard/src/index.css';
 
 const preview: Preview = {
   parameters: {
