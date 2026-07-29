@@ -1,5 +1,5 @@
 import type { User } from '../../types';
-import Pill from '../ui/Pill';
+import { Pill } from '@naon-timeline/ui';
 import formatDate from '../../lib/formatDate';
 
 export default function UserListItem({

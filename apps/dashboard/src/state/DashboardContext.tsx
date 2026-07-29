@@ -2,7 +2,7 @@ import { useMemo, useState, type ReactNode } from 'react';
 import mockUsers from '../data/mockUsers';
 import mockEvents from '../data/mockEvents';
 import type { Event, EventFilters, ModalState, User } from '../types';
-import useToast from '../components/ui/useToast';
+import { useToast } from '@naon-timeline/ui';
 import { DashboardContext, type DashboardContextValue } from './dashboardContextInstance';
 
 let uid = 100;

@@ -4,7 +4,7 @@ import { useForm } from '@tanstack/react-form';
 import { TextField, TextArea, Label, Input, FieldError, Checkbox, NumberField } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
 import useIsMobile from '../layout/useIsMobile';
-import Button from '../ui/Button';
+import { Button } from '@naon-timeline/ui';
 import EventMapPicker from './EventMapPicker';
 import { findAddress, MAP_CENTER } from '../../lib/geo';
 

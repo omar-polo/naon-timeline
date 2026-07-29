@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
 import type { Event } from '../../types';
-import Pill from '../ui/Pill';
+import { Pill } from '@naon-timeline/ui';
 import formatDate from '../../lib/formatDate';
 
 function excerpt(text: string) {

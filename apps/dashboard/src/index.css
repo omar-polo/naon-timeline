@@ -10,18 +10,6 @@
    apps/storybook) also scans apps/dashboard/src for utility classes. */
 @source ".";
 
-/* Admin-only tokens not part of the shared public-timeline theme
-   (packages/ui/src/theme.css), which apps/dashboard also imports for the
-   brand-shared ink/muted/border/accent/page/panel tokens. */
-@theme {
-  --color-success: oklch(55% 0.13 145);
-  --color-success-bg: oklch(92% 0.05 145);
-  --color-danger: oklch(55% 0.19 25);
-  --color-danger-bg: oklch(93% 0.04 25);
-  --color-gray: oklch(50% 0.01 250);
-  --color-gray-bg: oklch(92% 0.005 250);
-}
-
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

@@ -1,5 +1,5 @@
 import useDashboard from '../../state/useDashboard';
-import Button from '../ui/Button';
+import { Button } from '@naon-timeline/ui';
 import StatsGrid from './StatsGrid';
 import RecentActivityList from './RecentActivityList';
 

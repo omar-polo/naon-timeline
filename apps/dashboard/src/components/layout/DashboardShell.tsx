@@ -4,8 +4,7 @@ import { useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import ModalHost from './ModalHost';
-import Toast from '../ui/Toast';
-import Button from '../ui/Button';
+import { Toast, Button } from '@naon-timeline/ui';
 import useIsMobile from './useIsMobile';
 import useDashboard from '../../state/useDashboard';
 

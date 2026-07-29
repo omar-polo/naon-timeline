@@ -1,8 +1,7 @@
 import { useState } from 'react';
 import { TextField, Label, Input } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
+import { Modal, Button } from '@naon-timeline/ui';
 import type { ModalState } from '../../types';
 
 function randomPassword() {

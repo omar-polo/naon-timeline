@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import Pill from './Pill';
 
 const meta = {
-  title: 'Dashboard/UI/Pill',
+  title: 'UI/Pill',
   component: Pill,
 } satisfies Meta<typeof Pill>;
 

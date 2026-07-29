@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "leaflet": "^1.9.4",
+    "react-aria-components": "^1.19.0",
     "react-leaflet": "^5.0.0"
   },
   "devDependencies": {

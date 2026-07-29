@@ -25,6 +25,12 @@
   --color-accent-bg: oklch(90% 0.06 45);
   --color-page: oklch(97% 0.02 80);
   --color-panel: oklch(98% 0.012 80);
+  --color-success: oklch(55% 0.13 145);
+  --color-success-bg: oklch(92% 0.05 145);
+  --color-danger: oklch(55% 0.19 25);
+  --color-danger-bg: oklch(93% 0.04 25);
+  --color-gray: oklch(50% 0.01 250);
+  --color-gray-bg: oklch(92% 0.005 250);
   --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 

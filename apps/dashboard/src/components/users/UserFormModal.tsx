@@ -1,8 +1,7 @@
 import { useForm } from '@tanstack/react-form';
 import { TextField, Label, Input, FieldError } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
-import Modal from '../ui/Modal';
-import Button from '../ui/Button';
+import { Modal, Button } from '@naon-timeline/ui';
 import type { ModalState, Role } from '../../types';
 
 export default function UserFormModal({

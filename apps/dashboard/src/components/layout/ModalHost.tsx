@@ -1,6 +1,6 @@
 import { useNavigate } from '@tanstack/react-router';
 import useDashboard from '../../state/useDashboard';
-import ConfirmDialog from '../ui/ConfirmDialog';
+import { ConfirmDialog } from '@naon-timeline/ui';
 
 export default function ModalHost() {
   const { modal, closeModal, deleteUser, deleteEvent } = useDashboard();

@@ -21,7 +21,7 @@ function Demo() {
 }
 
 const meta = {
-  title: 'Dashboard/UI/ConfirmDialog',
+  title: 'UI/ConfirmDialog',
   component: Demo,
 } satisfies Meta<typeof Demo>;
 

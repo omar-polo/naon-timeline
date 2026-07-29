@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import Header from './Header';
-import Button from '../ui/Button';
+import { Button } from '@naon-timeline/ui';
 import { withRouter } from '../../testing/withRouter';
 
 const meta = {

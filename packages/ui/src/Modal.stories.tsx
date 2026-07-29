@@ -23,7 +23,7 @@ function Demo() {
 }
 
 const meta = {
-  title: 'Dashboard/UI/Modal',
+  title: 'UI/Modal',
   component: Demo,
 } satisfies Meta<typeof Demo>;
 

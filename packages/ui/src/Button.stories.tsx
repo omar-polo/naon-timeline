@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import Button from './Button';
 
 const meta = {
-  title: 'Dashboard/UI/Button',
+  title: 'UI/Button',
   component: Button,
   args: { children: 'Save changes', onPress: () => {} },
 } satisfies Meta<typeof Button>;
