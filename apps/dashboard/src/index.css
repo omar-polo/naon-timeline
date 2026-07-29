@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Pulled in as a real CSS @import (not a separate JS-level stylesheet
+   import) so it's part of this single Tailwind build - see the comment
+   in packages/ui/src/theme.css for why that matters. */
+@import "@naon-timeline/ui/theme.css";
+
 /* Self-register this directory as a Tailwind content source, mirroring
    packages/ui/src/theme.css - needed so Storybook (whose own Vite root is
    apps/storybook) also scans apps/dashboard/src for utility classes. */

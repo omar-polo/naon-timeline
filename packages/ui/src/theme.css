@@ -1,4 +1,12 @@
-@import "tailwindcss";
+/* No `@import "tailwindcss";` here on purpose: this file is a theme
+   partial, brought into each consuming app's own single Tailwind entry
+   via a real CSS `@import` (see apps/dashboard/src/index.css and
+   apps/timeline/src/index.css). Giving this file its own independent
+   `@import "tailwindcss"` root made Tailwind treat it as a separate build
+   whose own content scan never sees classes like `bg-accent` (only used
+   by consuming apps, not within this package) - so those utilities
+   silently failed to generate in some contexts (namely Storybook, whose
+   own Vite root is apps/storybook). */
 
 /* Tailwind's automatic content detection ignores anything reached through
    node_modules, which is how consuming apps see this package (pnpm

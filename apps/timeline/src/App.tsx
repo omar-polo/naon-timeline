@@ -1,5 +1,4 @@
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
-import '@naon-timeline/ui/theme.css'
 import 'leaflet/dist/leaflet.css';
 import { LatLngBounds } from 'leaflet';
 import { useEffect, useRef, useState } from 'react';

@@ -1,4 +1,3 @@
-import '@naon-timeline/ui/theme.css';
 import { RouterProvider } from '@tanstack/react-router';
 import { router } from './router';
 import { DashboardProvider } from './state/DashboardContext';
