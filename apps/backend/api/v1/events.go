@@ -41,6 +41,29 @@ func (s *Server) eventsNew(fc WithBody[Event]) (*Event, error) {
 	return events.New(conn, &ev)
 }
 
+func (s *Server) eventsGet(fc NoBody) (*Event, error) {
+	idstr := fc.PathParam("event_id")
+	id, err := strconv.ParseInt(idstr, 10, 64)
+	if err != nil {
+		return nil, fuego.NotFoundError{}
+	}
+
+	conn, err := s.pool.Take(fc)
+	if err != nil {
+		return nil, err
+	}
+	defer s.pool.Put(conn)
+
+	ev, err := events.Get(conn, id)
+	if err != nil {
+		return nil, err
+	}
+	if ev == nil {
+		return nil, fuego.NotFoundError{}
+	}
+	return ev, nil
+}
+
 func (s *Server) eventsUpdate(fc WithBody[Event]) (*Event, error) {
 	idstr := fc.PathParam("event_id")
 	id, err := strconv.ParseInt(idstr, 10, 64)

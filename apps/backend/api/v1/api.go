@@ -47,6 +47,8 @@ func NewServer(pool *sqlitex.Pool) *Server {
 	fuego.Post(public, "/events", server.eventsNew,
 		fuego.OptionDescription("Create a new event.  The ID field in the"+
 			" payload is ignored."))
+	fuego.Get(public, "/events/{event_id}", server.eventsGet,
+		fuego.OptionDescription("Update in-place an event."))
 	fuego.Put(public, "/events/{event_id}", server.eventsUpdate,
 		fuego.OptionDescription("Update in-place an event."))
 	fuego.Delete(public, "/events/{event_id}", server.eventsDelete,
