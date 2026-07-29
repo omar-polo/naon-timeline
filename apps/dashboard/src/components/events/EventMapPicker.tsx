@@ -45,7 +45,7 @@ export default function EventMapPicker({
   const position: LatLngTuple = [lat, lng];
 
   return (
-    <div className={`overflow-hidden rounded-lg ${isMobile ? 'h-[200px]' : 'h-[280px]'}`}>
+    <div className={`isolate overflow-hidden rounded-lg ${isMobile ? 'h-[200px]' : 'h-[280px]'}`}>
       <MapContainer
         center={MAP_CENTER}
         maxBounds={MAP_BOUNDS}
