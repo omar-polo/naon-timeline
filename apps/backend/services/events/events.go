@@ -1,8 +1,10 @@
 package events
 
 import (
+	"fmt"
 	"time"
 
+	sq "github.com/Masterminds/squirrel"
 	"zombiezen.com/go/sqlite"
 	"zombiezen.com/go/sqlite/sqlitex"
 )
@@ -29,19 +31,70 @@ type Event struct {
 	Image string    `json:"image"`
 }
 
+type Status = string
+
+const (
+	StatusAny       Status = "any"
+	StatusPublished Status = "published"
+	StatusDrafted   Status = "drafted"
+)
+
+func ValidateStatus(s string) (Status, bool) {
+	switch s {
+	case StatusAny:
+		return StatusAny, true
+	case StatusPublished:
+		return StatusPublished, true
+	case StatusDrafted:
+		return StatusDrafted, true
+	}
+	return "", false
+}
+
 type ListFilter struct {
-	IncludeDrafts bool
+	Status   Status
+	FromYear int
+	ToYear   int
+	Search   string
 }
 
 func List(conn *sqlite.Conn, f ListFilter) (es []Event, err error) {
-	query := `
-select id, draft, lat, lng, title, date, text, url, image
-  from events
- where ? or not draft
-`
+	if f.Status == "" {
+		f.Status = StatusAny
+	}
+
+	b := sq.Select("events.id", "events.draft", "events.lat", "events.lng",
+		"events.title", "events.date", "events.text", "events.url",
+		"events.image").
+		From("events").
+		OrderBy("events.date ASC")
+
+	switch f.Status {
+	case StatusPublished:
+		b = b.Where(sq.Eq{"draft": false})
+	case StatusDrafted:
+		b = b.Where(sq.Eq{"draft": true})
+	}
+
+	if f.FromYear != 0 {
+		b = b.Where(sq.GtOrEq{"date": fmt.Sprintf("%04d-01-01", f.FromYear)})
+	}
+	if f.ToYear != 0 {
+		b = b.Where(sq.LtOrEq{"date": fmt.Sprintf("%04d-12-31", f.ToYear)})
+	}
+
+	if f.Search != "" {
+		b = b.Join("events_fts on events_fts.rowid = events.id").
+			Where(sq.Expr("events_fts match ?", f.Search))
+	}
+
+	query, args, err := b.ToSql()
+	if err != nil {
+		return nil, err
+	}
 
 	err = sqlitex.Execute(conn, query, &sqlitex.ExecOptions{
-		Args: []any{f.IncludeDrafts},
+		Args: args,
 		ResultFunc: func(stmt *sqlite.Stmt) error {
 			date, err := time.Parse(dateLayout, stmt.GetText("date"))
 			if err != nil {

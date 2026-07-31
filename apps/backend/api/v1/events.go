@@ -10,10 +10,24 @@ import (
 type Event = events.Event
 
 func (s *Server) eventsList(fc NoBody) ([]Event, error) {
-	includeDrafts, err := boolparam(fc, "include-drafts")
+	status := fc.QueryParam("status")
+	if status != "" {
+		if _, ok := events.ValidateStatus(status); !ok {
+			return nil, fuego.BadRequestError{}
+		}
+	}
+
+	fromy, err := intparam(fc, "from-year")
 	if err != nil {
 		return nil, fuego.BadRequestError{}
 	}
+
+	toy, err := intparam(fc, "to-year")
+	if err != nil {
+		return nil, fuego.BadRequestError{}
+	}
+
+	search := fc.QueryParam("search")
 
 	conn, err := s.pool.Take(fc)
 	if err != nil {
@@ -21,7 +35,12 @@ func (s *Server) eventsList(fc NoBody) ([]Event, error) {
 	}
 	defer s.pool.Put(conn)
 
-	return events.List(conn, events.ListFilter{IncludeDrafts: includeDrafts})
+	return events.List(conn, events.ListFilter{
+		Status:   status,
+		FromYear: fromy,
+		ToYear:   toy,
+		Search:   search,
+	})
 }
 
 func (s *Server) eventsNew(fc WithBody[Event]) (*Event, error) {

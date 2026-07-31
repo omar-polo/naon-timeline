@@ -24,19 +24,6 @@ func TestEventsList(t *testing.T) {
 		err := json.NewDecoder(res.Body).Decode(&evs)
 		require.NoError(t, err)
 
-		for _, ev := range evs {
-			require.False(t, ev.Draft, "found a draft event %d (%v)", ev.Id, ev.Title)
-		}
-	})
-
-	t.Run("can exclude drafts if told so", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("GET", "/api/v1/events?include-drafts=true", nil))
-		require.Equal(t, 200, res.Code)
-
-		var evs []Event
-		err := json.NewDecoder(res.Body).Decode(&evs)
-		require.NoError(t, err)
-
 		var drafts, published int
 		for _, ev := range evs {
 			if ev.Draft {
@@ -49,8 +36,34 @@ func TestEventsList(t *testing.T) {
 		require.NotZero(t, published, "does not contains published events")
 	})
 
+	t.Run("list only published if told so", func(t *testing.T) {
+		res := simulate(server, httptest.NewRequest("GET", "/api/v1/events?status=published", nil))
+		require.Equal(t, 200, res.Code)
+
+		var evs []Event
+		err := json.NewDecoder(res.Body).Decode(&evs)
+		require.NoError(t, err)
+
+		for _, ev := range evs {
+			require.False(t, ev.Draft, "found a draft event %d (%v)", ev.Id, ev.Title)
+		}
+	})
+
+	t.Run("list only drafted if told so", func(t *testing.T) {
+		res := simulate(server, httptest.NewRequest("GET", "/api/v1/events?status=drafted", nil))
+		require.Equal(t, 200, res.Code)
+
+		var evs []Event
+		err := json.NewDecoder(res.Body).Decode(&evs)
+		require.NoError(t, err)
+
+		for _, ev := range evs {
+			require.True(t, ev.Draft, "found non-draft event %d (%v)", ev.Id, ev.Title)
+		}
+	})
+
 	t.Run("fails with a bad value for include-drafts", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("GET", "/api/v1/events?include-drafts=notabool", nil))
+		res := simulate(server, httptest.NewRequest("GET", "/api/v1/events?status=foobar", nil))
 		require.Equal(t, 400, res.Code)
 	})
 }

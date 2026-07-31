@@ -3,6 +3,7 @@ module github.com/omar-polo/naon-timeline/apps/backend
 go 1.26.5
 
 require (
+	github.com/Masterminds/squirrel v1.5.4
 	github.com/go-fuego/fuego v0.20.0
 	github.com/stretchr/testify v1.11.1
 	zombiezen.com/go/sqlite v1.4.2
@@ -21,6 +22,8 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.3.1 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/schema v1.4.1 // indirect
+	github.com/lann/builder v0.0.0-20180802200727-47ae307949d0 // indirect
+	github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/ncruces/go-strftime v1.0.0 // indirect

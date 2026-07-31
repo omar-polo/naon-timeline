@@ -44,9 +44,16 @@ func NewServer(pool *sqlitex.Pool) *Server {
 		fuego.OptionDescription("Retrieve some stats"))
 
 	fuego.Get(public, "/events", server.eventsList,
-		fuego.OptionQuery("include-drafts", "Include drafts events",
-			fuego.ParamBool()),
-		fuego.OptionDescription("List events, optionally filter for drafts."))
+		fuego.OptionQuery("search", "filter by matching title and text",
+			fuego.ParamString()),
+		fuego.OptionQuery("status", "to filter the status,"+
+			" possible values are 'any', 'published', 'drafted'.",
+			fuego.ParamString()),
+		fuego.OptionQuery("from-year", "filter events from than the given year",
+			fuego.ParamInteger()),
+		fuego.OptionQuery("to-year", "filter events until than the given year",
+			fuego.ParamInteger()),
+		fuego.OptionDescription("List events with filters"))
 	fuego.Post(public, "/events", server.eventsNew,
 		fuego.OptionDescription("Create a new event.  The ID field in the"+
 			" payload is ignored."))
