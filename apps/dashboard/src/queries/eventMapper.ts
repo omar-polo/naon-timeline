@@ -1,21 +1,24 @@
+import { z } from 'zod';
 import type { Event } from '../types';
 
 // Mirrors components["schemas"]["Event"] in @naon-timeline/api-client's
-// generated schema - kept local since the package only exports the client,
-// not its types, and this is the one place the wire shape meets the
-// dashboard's flat Event type.
-export interface WireEvent {
-  id: number;
-  draft?: boolean;
-  coord: { lat: number; lng: number };
-  title: string;
-  date: string;
-  text: string;
-  url: string;
-  image: string;
-}
+// generated schema - kept in sync by hand since the package only exports
+// the client, not a runtime-checkable schema.
+export const wireEventSchema = z.object({
+  id: z.number(),
+  draft: z.boolean().optional(),
+  coord: z.object({ lat: z.number(), lng: z.number() }),
+  title: z.string(),
+  date: z.iso.datetime(),
+  text: z.string(),
+  url: z.string(),
+  image: z.string(),
+});
 
-export function toEvent(ev: WireEvent): Event {
+export type WireEvent = z.infer<typeof wireEventSchema>;
+
+export function toEvent(raw: unknown): Event {
+  const ev = wireEventSchema.parse(raw);
   return {
     id: ev.id,
     title: ev.title,
