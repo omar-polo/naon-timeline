@@ -15,24 +15,11 @@ const columns = [
 
 export default function EventsPage() {
   const { eventFilters, setEventFilters } = useDashboard();
-  const { data: events, isLoading, error } = useEvents();
+  const { data: events, isLoading, error } = useEvents(eventFilters);
   const isMobile = useIsMobile();
 
-  const searchQ = eventFilters.search.trim().toLowerCase();
-  const yFrom = eventFilters.yearFrom ? +eventFilters.yearFrom : null;
-  const yTo = eventFilters.yearTo ? +eventFilters.yearTo : null;
-  const filtered = (events ?? []).filter((ev) => {
-    if (searchQ && !ev.title.toLowerCase().includes(searchQ) && !ev.text.toLowerCase().includes(searchQ)) return false;
-    if (eventFilters.status === 'published' && ev.draft) return false;
-    if (eventFilters.status === 'draft' && !ev.draft) return false;
-    const year = +ev.date.slice(0, 4);
-    if (yFrom !== null && year < yFrom) return false;
-    if (yTo !== null && year > yTo) return false;
-    return true;
-  });
-  const sorted = filtered.slice().sort((a, b) => a.date.localeCompare(b.date));
-
-  const table = useReactTable({ data: sorted, columns, getCoreRowModel: getCoreRowModel() });
+  const list = events ?? [];
+  const table = useReactTable({ data: list, columns, getCoreRowModel: getCoreRowModel() });
 
   return (
     <>
@@ -43,7 +30,7 @@ export default function EventsPage() {
 
       {!isLoading && !error && (isMobile ? (
         <div className="flex flex-col gap-3">
-          {sorted.map((ev) => (
+          {list.map((ev) => (
             <EventListItem key={ev.id} event={ev} isMobile />
           ))}
         </div>

@@ -30,6 +30,13 @@ export interface EventFilters {
   yearTo: string;
 }
 
+export const DEFAULT_EVENT_FILTERS: EventFilters = {
+  search: '',
+  status: 'all',
+  yearFrom: '',
+  yearTo: '',
+};
+
 export type ModalState =
   | { kind: 'userForm'; mode: 'create' }
   | { kind: 'userForm'; mode: 'edit'; userId: number }

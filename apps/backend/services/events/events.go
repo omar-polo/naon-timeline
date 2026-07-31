@@ -67,7 +67,7 @@ func List(conn *sqlite.Conn, f ListFilter) (es []Event, err error) {
 		"events.title", "events.date", "events.text", "events.url",
 		"events.image").
 		From("events").
-		OrderBy("events.date ASC")
+		OrderBy("events.date DESC")
 
 	switch f.Status {
 	case StatusPublished:

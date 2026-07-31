@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from 'react';
 import mockUsers from '../data/mockUsers';
 import mockEvents from '../data/mockEvents';
-import type { EventFilters, ModalState, User } from '../types';
+import { DEFAULT_EVENT_FILTERS, type EventFilters, type ModalState, type User } from '../types';
 import { useToast } from '@naon-timeline/ui';
 import { DashboardContext, type DashboardContextValue } from './dashboardContextInstance';
 
@@ -11,12 +11,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const events = mockEvents;
   const [modal, setModal] = useState<ModalState | null>(null);
-  const [eventFilters, setEventFiltersState] = useState<EventFilters>({
-    search: '',
-    status: 'all',
-    yearFrom: '',
-    yearTo: '',
-  });
+  const [eventFilters, setEventFiltersState] = useState<EventFilters>(DEFAULT_EVENT_FILTERS);
   const { message: toast, showToast } = useToast();
 
   const value = useMemo<DashboardContextValue>(
