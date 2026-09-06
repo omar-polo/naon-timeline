@@ -13,7 +13,10 @@ import (
 )
 
 //go:embed events-fixture.sql
-var fixtures []byte
+var eventsFixtures []byte
+
+//go:embed users-fixture.sql
+var usersFixtures []byte
 
 func NewPool(t *testing.T) *sqlitex.Pool {
 	pool, err := db.Open(filepath.Join(t.TempDir(), "db.sqlite3"))
@@ -24,7 +27,10 @@ func NewPool(t *testing.T) *sqlitex.Pool {
 	require.NoError(t, err)
 	defer pool.Put(conn)
 
-	err = sqlitex.ExecuteScript(conn, string(fixtures), nil)
+	err = sqlitex.ExecuteScript(conn, string(eventsFixtures), nil)
+	require.NoError(t, err)
+
+	err = sqlitex.ExecuteScript(conn, string(usersFixtures), nil)
 	require.NoError(t, err)
 
 	return pool

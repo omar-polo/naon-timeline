@@ -64,6 +64,19 @@ func NewServer(pool *sqlitex.Pool) *Server {
 	fuego.Delete(public, "/events/{event_id}", server.eventsDelete,
 		fuego.OptionDescription("Delete an event given its ID."))
 
+	fuego.Get(public, "/users", server.usersList,
+		fuego.OptionDescription("List users"))
+	fuego.Post(public, "/users", server.usersNew,
+		fuego.OptionDescription("Create a new user."))
+	fuego.Get(public, "/users/{user_id}", server.usersGet,
+		fuego.OptionDescription("Get a user by ID."))
+	fuego.Put(public, "/users/{user_id}", server.usersUpdate,
+		fuego.OptionDescription("Update in-place a user, excluding its password."))
+	fuego.Post(public, "/users/{user_id}/password", server.usersSetPassword,
+		fuego.OptionDescription("Set a user's password."))
+	fuego.Delete(public, "/users/{user_id}", server.usersDelete,
+		fuego.OptionDescription("Delete a user given its ID."))
+
 	return server
 }
 
