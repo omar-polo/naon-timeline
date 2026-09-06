@@ -17,6 +17,16 @@ func Stats(conn *sqlite.Conn) (*Info, error) {
 		err  error
 	)
 
+	err = sqlitex.Execute(conn, `select count(*) as t from users`, &sqlitex.ExecOptions{
+		ResultFunc: func(stmt *sqlite.Stmt) error {
+			info.Users = int(stmt.GetInt64("t"))
+			return nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+
 	err = sqlitex.Execute(conn, `select count(*) as t from events`, &sqlitex.ExecOptions{
 		ResultFunc: func(stmt *sqlite.Stmt) error {
 			info.Events = int(stmt.GetInt64("t"))
