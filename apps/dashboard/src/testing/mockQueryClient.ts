@@ -1,5 +1,6 @@
 import { QueryClient } from '@tanstack/react-query';
 import mockEvents from '../data/mockEvents';
+import mockUsers from '../data/mockUsers';
 import { DEFAULT_EVENT_FILTERS } from '../types';
 
 // Storybook has no real backend behind it - seed the cache with the same
@@ -18,5 +19,10 @@ export function createMockQueryClient() {
   for (const event of mockEvents) {
     queryClient.setQueryData(['events', String(event.id)], event);
   }
+  queryClient.setQueryData(['info'], {
+    users: mockUsers.length,
+    events: mockEvents.length,
+    drafts: mockEvents.filter((e) => e.draft).length,
+  });
   return queryClient;
 }
