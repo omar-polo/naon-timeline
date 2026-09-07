@@ -3,20 +3,23 @@ import logo from '../../logo-terracotta.svg';
 import useLogout from '../../queries/useLogout';
 
 const NAV_ITEMS = [
-  { to: '/', label: 'Overview' },
-  { to: '/events', label: 'Events' },
-  { to: '/users', label: 'Users' },
+  { to: '/', label: 'Overview', adminOnly: false },
+  { to: '/events', label: 'Events', adminOnly: false },
+  { to: '/users', label: 'Users', adminOnly: true },
 ] as const;
 
 export default function Sidebar({
-  adminName,
+  userName,
+  isAdmin,
   onNavigate,
 }: {
-  adminName: string;
+  userName: string;
+  isAdmin: boolean;
   onNavigate?: () => void;
 }) {
   const navigate = useNavigate();
   const logoutMutation = useLogout();
+  const navItems = NAV_ITEMS.filter((item) => !item.adminOnly || isAdmin);
 
   return (
     <div className="flex h-full flex-col p-3.5">
@@ -25,7 +28,7 @@ export default function Sidebar({
         <span className="whitespace-nowrap text-sm font-bold tracking-tight">Naon Dashboard</span>
       </div>
       <nav className="flex flex-col gap-0.5">
-        {NAV_ITEMS.map((item) => (
+        {navItems.map((item) => (
           <Link
             key={item.to}
             to={item.to}
@@ -47,7 +50,7 @@ export default function Sidebar({
       </nav>
       <div className="mt-auto border-t border-border px-2 pt-2.5 text-[11px] text-muted">
         <div>
-          Signed in as <strong className="text-ink">{adminName}</strong>
+          Signed in as <strong className="text-ink">{userName}</strong>
         </div>
         <button
           type="button"

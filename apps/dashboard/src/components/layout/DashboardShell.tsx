@@ -7,12 +7,15 @@ import ModalHost from './ModalHost';
 import { Toast, Button } from '@naon-timeline/ui';
 import useIsMobile from './useIsMobile';
 import useDashboard from '../../state/useDashboard';
+import useCurrentUser from '../../queries/useCurrentUser';
 
 export default function DashboardShell() {
   const isMobile = useIsMobile();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const { pathname } = useLocation();
   const { openModal, toast } = useDashboard();
+  const { data: currentUser } = useCurrentUser();
+  const isAdmin = currentUser?.role === 'admin';
 
   const isEventForm = pathname.startsWith('/events/');
   let title: string | undefined;
@@ -23,7 +26,9 @@ export default function DashboardShell() {
     title = 'Overview';
   } else if (pathname === '/users') {
     title = 'Users';
-    primaryAction = <Button onPress={() => openModal({ kind: 'userForm', mode: 'create' })}>+ New user</Button>;
+    if (isAdmin) {
+      primaryAction = <Button onPress={() => openModal({ kind: 'userForm', mode: 'create' })}>+ New user</Button>;
+    }
   } else if (pathname === '/events') {
     title = 'Events';
     primaryAction = (
@@ -37,7 +42,9 @@ export default function DashboardShell() {
     breadcrumbLabel = 'Edit event';
   }
 
-  const sidebar = <Sidebar adminName="Admin" onNavigate={() => setMobileNavOpen(false)} />;
+  const sidebar = (
+    <Sidebar userName={currentUser?.name ?? ''} isAdmin={isAdmin} onNavigate={() => setMobileNavOpen(false)} />
+  );
 
   return (
     <div className="flex h-dvh overflow-hidden bg-page font-sans text-ink">

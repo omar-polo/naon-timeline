@@ -24,5 +24,13 @@ export function createMockQueryClient() {
     events: mockEvents.length,
     drafts: mockEvents.filter((e) => e.draft).length,
   });
+  queryClient.setQueryData(['me'], {
+    id: 1,
+    email: 'sofia.ricci@example.com',
+    name: 'Sofia Ricci',
+    role: 'admin',
+    status: 'active',
+    created: '2024-01-15',
+  });
   return queryClient;
 }

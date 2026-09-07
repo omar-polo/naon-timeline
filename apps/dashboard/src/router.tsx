@@ -5,7 +5,9 @@ import OverviewPage from './components/overview/OverviewPage';
 import UsersPage from './components/users/UsersPage';
 import EventsPage from './components/events/EventsPage';
 import EventFormPage from './components/events/EventFormPage';
-import { api, setUnauthorizedHandler } from './lib/apiClient';
+import { setUnauthorizedHandler } from './lib/apiClient';
+import { queryClient } from './lib/queryClient';
+import { currentUserQueryOptions } from './queries/useCurrentUser';
 
 const rootRoute = createRootRoute({ component: Outlet });
 
@@ -19,13 +21,24 @@ const appRoute = createRoute({
   getParentRoute: () => rootRoute,
   component: DashboardShell,
   beforeLoad: async () => {
-    const { error } = await api.GET('/api/v1/me');
-    if (error) throw redirect({ to: '/login' });
+    try {
+      await queryClient.ensureQueryData(currentUserQueryOptions);
+    } catch {
+      throw redirect({ to: '/login' });
+    }
   },
 });
 
 const overviewRoute = createRoute({ getParentRoute: () => appRoute, path: '/', component: OverviewPage });
-const usersRoute = createRoute({ getParentRoute: () => appRoute, path: '/users', component: UsersPage });
+const usersRoute = createRoute({
+  getParentRoute: () => appRoute,
+  path: '/users',
+  component: UsersPage,
+  beforeLoad: async () => {
+    const user = await queryClient.ensureQueryData(currentUserQueryOptions);
+    if (user.role !== 'admin') throw redirect({ to: '/' });
+  },
+});
 const eventsRoute = createRoute({ getParentRoute: () => appRoute, path: '/events', component: EventsPage });
 const newEventRoute = createRoute({
   getParentRoute: () => appRoute,
