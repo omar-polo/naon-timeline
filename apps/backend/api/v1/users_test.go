@@ -206,4 +206,17 @@ func TestUsersDelete(t *testing.T) {
 		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/notanumber", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
+
+	t.Run("cannot delete yourself", func(t *testing.T) {
+		var res *httptest.ResponseRecorder
+
+		res = simulate(server, authed(httptest.NewRequest("GET", "/api/v1/me", nil), admin))
+		require.Equal(t, 200, res.Code)
+		var u users.User
+		require.NoError(t, json.NewDecoder(res.Body).Decode(&u))
+
+		ids := fmt.Sprint(u.Id)
+		res = simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/"+ids, nil), admin))
+		require.Equal(t, 400, res.Code)
+	})
 }

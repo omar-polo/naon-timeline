@@ -168,6 +168,11 @@ func (s *Server) usersDelete(fc NoBody) (any, error) {
 		return nil, fuego.NotFoundError{}
 	}
 
+	// a user should not be able to delete themselves
+	if u := contextUser(fc); u == nil || u.Id == id {
+		return nil, fuego.BadRequestError{}
+	}
+
 	conn, err := s.pool.Take(fc)
 	if err != nil {
 		return nil, err
