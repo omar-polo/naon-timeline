@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -27,6 +28,17 @@ func simulate(s *Server, req *http.Request) *httptest.ResponseRecorder {
 func authed(req *http.Request, cookie *http.Cookie) *http.Request {
 	req.AddCookie(cookie)
 	return req
+}
+
+func getMe(t *testing.T, server *Server, cookie *http.Cookie) users.User {
+	t.Helper()
+
+	res := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/me", nil), cookie))
+	require.Equal(t, 200, res.Code)
+
+	var me users.User
+	require.NoError(t, json.NewDecoder(res.Body).Decode(&me))
+	return me
 }
 
 // newSession creates a user with the given role and returns a cookie

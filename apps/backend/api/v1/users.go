@@ -123,6 +123,18 @@ func (s *Server) usersUpdate(fc WithBody[User]) (*User, error) {
 	// make sure we're editing the right user
 	u.Id = id
 
+	// an user cannot change their permissions level, nor disable
+	// themself.
+	cu := contextUser(fc)
+	if cu == nil {
+		return nil, fuego.InternalServerError{}
+	}
+	if cu.Id == u.Id {
+		if cu.Role != u.Role || u.Status == users.StatusDisabled {
+			return nil, fuego.BadRequestError{}
+		}
+	}
+
 	conn, err := s.pool.Take(fc)
 	if err != nil {
 		return nil, err

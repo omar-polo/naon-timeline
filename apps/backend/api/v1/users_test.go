@@ -158,6 +158,46 @@ func TestUsersUpdate(t *testing.T) {
 		res := simulate(server, authed(httptest.NewRequest("PUT", "/api/v1/users/notanumber", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
+
+	t.Run("cannot change own role", func(t *testing.T) {
+		me := getMe(t, server, admin)
+
+		updated := User{Email: me.Email, Name: me.Name, Role: "user", Status: me.Status}
+		body, err := json.Marshal(updated)
+		require.NoError(t, err)
+
+		req := authed(httptest.NewRequest("PUT", "/api/v1/users/"+fmt.Sprint(me.Id), bytes.NewReader(body)), admin)
+		res := simulate(server, req)
+		require.Equal(t, 400, res.Code)
+	})
+
+	t.Run("cannot disable self", func(t *testing.T) {
+		me := getMe(t, server, admin)
+
+		updated := User{Email: me.Email, Name: me.Name, Role: me.Role, Status: "disabled"}
+		body, err := json.Marshal(updated)
+		require.NoError(t, err)
+
+		req := authed(httptest.NewRequest("PUT", "/api/v1/users/"+fmt.Sprint(me.Id), bytes.NewReader(body)), admin)
+		res := simulate(server, req)
+		require.Equal(t, 400, res.Code)
+	})
+
+	t.Run("can update self without touching role or status", func(t *testing.T) {
+		me := getMe(t, server, admin)
+
+		updated := User{Email: me.Email, Name: "Updated Self Name", Role: me.Role, Status: me.Status}
+		body, err := json.Marshal(updated)
+		require.NoError(t, err)
+
+		req := authed(httptest.NewRequest("PUT", "/api/v1/users/"+fmt.Sprint(me.Id), bytes.NewReader(body)), admin)
+		res := simulate(server, req)
+		require.Equal(t, 200, res.Code)
+
+		var u User
+		require.NoError(t, json.NewDecoder(res.Body).Decode(&u))
+		require.Equal(t, "Updated Self Name", u.Name)
+	})
 }
 
 func TestUsersSetPassword(t *testing.T) {
@@ -208,15 +248,9 @@ func TestUsersDelete(t *testing.T) {
 	})
 
 	t.Run("cannot delete yourself", func(t *testing.T) {
-		var res *httptest.ResponseRecorder
+		me := getMe(t, server, admin)
 
-		res = simulate(server, authed(httptest.NewRequest("GET", "/api/v1/me", nil), admin))
-		require.Equal(t, 200, res.Code)
-		var u users.User
-		require.NoError(t, json.NewDecoder(res.Body).Decode(&u))
-
-		ids := fmt.Sprint(u.Id)
-		res = simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/"+ids, nil), admin))
+		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/"+fmt.Sprint(me.Id), nil), admin))
 		require.Equal(t, 400, res.Code)
 	})
 }
