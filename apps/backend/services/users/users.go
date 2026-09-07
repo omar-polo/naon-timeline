@@ -51,6 +51,10 @@ func ValidateStatus(s string) (Status, bool) {
 // use by another user.
 var ErrEmailTaken = errors.New("email already in use")
 
+// ErrInvalidCredentials is returned by Authenticate for an unknown email,
+// wrong password, or disabled account alike, so callers can't tell which.
+var ErrInvalidCredentials = errors.New("invalid credentials")
+
 type User struct {
 	Id        int64      `json:"id"`
 	Email     string     `json:"email"`
@@ -134,6 +138,44 @@ select id, email, name, role, status, created, last_login
 	if !found {
 		return nil, nil
 	}
+	return &u, nil
+}
+
+// Authenticate checks password against email's stored hash.
+func Authenticate(conn *sqlite.Conn, email, password string) (*User, error) {
+	query := `
+select id, email, name, password, role, status, created, last_login
+  from users
+ where email = $email
+`
+
+	var u User
+	var hash string
+	var found bool
+	err := sqlitex.Execute(conn, query, &sqlitex.ExecOptions{
+		Named: map[string]any{"$email": email},
+		ResultFunc: func(stmt *sqlite.Stmt) error {
+			var err error
+			u, err = scanUser(stmt)
+			if err != nil {
+				return err
+			}
+			hash = stmt.GetText("password")
+			found = true
+			return nil
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	if !found || u.Status != StatusActive {
+		return nil, ErrInvalidCredentials
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password)); err != nil {
+		return nil, ErrInvalidCredentials
+	}
+
 	return &u, nil
 }
 

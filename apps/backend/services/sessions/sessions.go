@@ -13,7 +13,9 @@ import (
 
 const (
 	timeLayout = time.RFC3339
-	duration   = 7 * 24 * time.Hour
+
+	// Duration is the fixed session lifetime.
+	Duration = 7 * 24 * time.Hour
 )
 
 func hashToken(token string) string {
@@ -35,7 +37,7 @@ insert into sessions ( token_hash,  user_id,  created,  expires)
 			"$token_hash": hashToken(token),
 			"$user_id":    userId,
 			"$created":    now.Format(timeLayout),
-			"$expires":    now.Add(duration).Format(timeLayout),
+			"$expires":    now.Add(Duration).Format(timeLayout),
 		},
 	})
 	if err != nil {

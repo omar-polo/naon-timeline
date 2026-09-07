@@ -198,4 +198,65 @@ func TestUsers(t *testing.T) {
 		require.NoError(t, err)
 		require.Nil(t, u)
 	})
+
+	t.Run("TestAuthenticate", func(t *testing.T) {
+		conn := bt.Conn(t, pool)
+		defer pool.Put(conn)
+		defer bt.AutoRolloutSavepoint(t, conn)()
+
+		newuser, err := New(conn, &User{
+			Email:  "auth@example.com",
+			Name:   "Auth Me",
+			Role:   RoleUser,
+			Status: StatusActive,
+		}, "hunter2")
+		require.NoError(t, err)
+
+		u, err := Authenticate(conn, newuser.Email, "hunter2")
+		require.NoError(t, err)
+		require.Equal(t, *newuser, *u)
+	})
+
+	t.Run("TestAuthenticateWrongPassword", func(t *testing.T) {
+		conn := bt.Conn(t, pool)
+		defer pool.Put(conn)
+		defer bt.AutoRolloutSavepoint(t, conn)()
+
+		newuser, err := New(conn, &User{
+			Email:  "auth-wrong@example.com",
+			Name:   "Auth Me",
+			Role:   RoleUser,
+			Status: StatusActive,
+		}, "hunter2")
+		require.NoError(t, err)
+
+		_, err = Authenticate(conn, newuser.Email, "wrong-password")
+		require.ErrorIs(t, err, ErrInvalidCredentials)
+	})
+
+	t.Run("TestAuthenticateUnknownEmail", func(t *testing.T) {
+		conn := bt.Conn(t, pool)
+		defer pool.Put(conn)
+		defer bt.AutoRolloutSavepoint(t, conn)()
+
+		_, err := Authenticate(conn, "nobody@example.com", "hunter2")
+		require.ErrorIs(t, err, ErrInvalidCredentials)
+	})
+
+	t.Run("TestAuthenticateDisabled", func(t *testing.T) {
+		conn := bt.Conn(t, pool)
+		defer pool.Put(conn)
+		defer bt.AutoRolloutSavepoint(t, conn)()
+
+		newuser, err := New(conn, &User{
+			Email:  "auth-disabled@example.com",
+			Name:   "Auth Me",
+			Role:   RoleUser,
+			Status: StatusDisabled,
+		}, "hunter2")
+		require.NoError(t, err)
+
+		_, err = Authenticate(conn, newuser.Email, "hunter2")
+		require.ErrorIs(t, err, ErrInvalidCredentials)
+	})
 }

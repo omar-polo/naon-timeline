@@ -43,6 +43,11 @@ func NewServer(pool *sqlitex.Pool) *Server {
 	fuego.Get(public, "/info", server.info,
 		fuego.OptionDescription("Retrieve some stats"))
 
+	fuego.Post(public, "/login", server.login,
+		fuego.OptionDescription("Log in and receive a session cookie."))
+	fuego.Post(public, "/logout", server.logout,
+		fuego.OptionDescription("Log out and clear the session cookie."))
+
 	fuego.Get(public, "/events", server.eventsList,
 		fuego.OptionQuery("search", "filter by matching title and text",
 			fuego.ParamString()),
