@@ -19,6 +19,7 @@ export function createMockQueryClient() {
   for (const event of mockEvents) {
     queryClient.setQueryData(['events', String(event.id)], event);
   }
+  queryClient.setQueryData(['users'], mockUsers);
   queryClient.setQueryData(['info'], {
     users: mockUsers.length,
     events: mockEvents.length,

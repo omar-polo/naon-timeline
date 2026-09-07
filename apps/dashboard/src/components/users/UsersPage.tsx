@@ -1,6 +1,7 @@
 import { createColumnHelper, flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table';
 import type { User } from '../../types';
 import useDashboard from '../../state/useDashboard';
+import useUsers from '../../queries/useUsers';
 import useIsMobile from '../layout/useIsMobile';
 import UserListItem from './UserListItem';
 import UserFormModal from './UserFormModal';
@@ -15,15 +16,21 @@ const columns = [
 ];
 
 export default function UsersPage() {
-  const { users, modal, openModal } = useDashboard();
+  const { modal, openModal } = useDashboard();
+  const { data: users, isLoading, error } = useUsers();
   const isMobile = useIsMobile();
-  const table = useReactTable({ data: users, columns, getCoreRowModel: getCoreRowModel() });
+
+  const list = users ?? [];
+  const table = useReactTable({ data: list, columns, getCoreRowModel: getCoreRowModel() });
 
   return (
     <>
-      {isMobile ? (
+      {isLoading && <p className="text-[13px] text-muted">Loading users…</p>}
+      {error && <p className="text-[13px] text-danger">Couldn&apos;t load users: {error.message}</p>}
+
+      {!isLoading && !error && (isMobile ? (
         <div className="flex flex-col gap-3">
-          {users.map((u) => (
+          {list.map((u) => (
             <UserListItem key={u.id} user={u} isMobile onEdit={() => openModal({ kind: 'userForm', mode: 'edit', userId: u.id })} />
           ))}
         </div>
@@ -51,7 +58,7 @@ export default function UsersPage() {
             ))}
           </tbody>
         </table>
-      )}
+      ))}
 
       {modal?.kind === 'userForm' && <UserFormModal modal={modal} />}
       {modal?.kind === 'resetPassword' && <ResetPasswordModal modal={modal} />}
