@@ -47,8 +47,7 @@ insert into sessions ( token_hash,  user_id,  created,  expires)
 	return token, nil
 }
 
-// Validate returns the user owning token, or nil if the token is
-// missing or expired.
+// Validate returns the user owning token, or nil if missing or expired.
 func Validate(conn *sqlite.Conn, token string) (*users.User, error) {
 	query := `select user_id from sessions where token_hash = $token_hash and expires > $now`
 

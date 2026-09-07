@@ -205,8 +205,7 @@ func New(conn *sqlite.Conn, u *User, password string) (*User, error) {
 		return nil, err
 	}
 
-	// truncate to date-only precision, matching what's actually stored and
-	// what Get/List will parse back
+	// truncate to date-only precision, matching what's stored and read back
 	created, err := time.Parse(dateLayout, time.Now().UTC().Format(dateLayout))
 	if err != nil {
 		return nil, err

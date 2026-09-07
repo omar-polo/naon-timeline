@@ -65,7 +65,6 @@ func TestSessions(t *testing.T) {
 		token, err := New(conn, u.Id)
 		require.NoError(t, err)
 
-		// force expiry into the past directly, bypassing New's fixed duration
 		err = sqlitex.Execute(conn, `update sessions set expires = $expires where token_hash = $token_hash`, &sqlitex.ExecOptions{
 			Named: map[string]any{
 				"$expires":    time.Now().UTC().Add(-time.Hour).Format(timeLayout),
