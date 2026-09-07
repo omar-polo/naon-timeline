@@ -18,10 +18,26 @@ export function toUser(raw: unknown): User {
   const u = wireUserSchema.parse(raw);
   return {
     id: u.id,
+    email: u.email,
     name: u.name,
     role: u.role,
     status: u.status,
     created: u.created.slice(0, 10),
     lastLogin: u.lastLogin ? u.lastLogin.slice(0, 10) : '—',
+  };
+}
+
+// The backend's PUT expects the full User shape back (it only persists
+// email/name/role/status, but id and created are required by the schema) -
+// created round-trips through the same T00:00:00Z convention as events'
+// toWireEvent, since both only ever collect a plain yyyy-mm-dd from the UI.
+export function toWireUserUpdate(user: User) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    status: user.status,
+    created: `${user.created}T00:00:00Z`,
   };
 }

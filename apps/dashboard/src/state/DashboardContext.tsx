@@ -5,8 +5,6 @@ import { DEFAULT_EVENT_FILTERS, type EventFilters, type ModalState, type User } 
 import { useToast } from '@naon-timeline/ui';
 import { DashboardContext, type DashboardContextValue } from './dashboardContextInstance';
 
-let uid = 100;
-
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<User[]>(mockUsers);
   const events = mockEvents;
@@ -25,24 +23,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       openModal: (m) => setModal(m),
       closeModal: () => setModal(null),
       setEventFilters: (patch) => setEventFiltersState((f) => ({ ...f, ...patch })),
-      createUser: ({ name, role }) => {
-        const newUser: User = {
-          id: ++uid,
-          name: name.trim(),
-          role,
-          status: 'active',
-          created: new Date().toISOString().slice(0, 10),
-          lastLogin: '—',
-        };
-        setUsers((us) => [...us, newUser]);
-        setModal(null);
-        showToast('User created');
-      },
-      updateUser: (id, { name, role }) => {
-        setUsers((us) => us.map((u) => (u.id === id ? { ...u, name: name.trim(), role } : u)));
-        setModal(null);
-        showToast('User updated');
-      },
       deleteUser: (id) => {
         setUsers((us) => us.filter((u) => u.id !== id));
         setModal(null);

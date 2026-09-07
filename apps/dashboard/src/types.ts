@@ -1,10 +1,12 @@
 export type Role = 'admin' | 'user';
+export type Status = 'active' | 'disabled';
 
 export interface User {
   id: number;
+  email: string;
   name: string;
   role: Role;
-  status: 'active' | 'disabled';
+  status: Status;
   created: string;
   lastLogin: string;
 }
