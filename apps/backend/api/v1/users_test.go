@@ -8,14 +8,16 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/omar-polo/naon-timeline/apps/backend/services/users"
 	"github.com/stretchr/testify/require"
 )
 
 func TestUsersList(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
-	res := simulate(server, httptest.NewRequest("GET", "/api/v1/users", nil))
+	res := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users", nil), admin))
 	require.Equal(t, 200, res.Code)
 
 	require.NotContains(t, res.Body.String(), "password")
@@ -28,9 +30,10 @@ func TestUsersList(t *testing.T) {
 func TestUsersGet(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
 	t.Run("user exists", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("GET", "/api/v1/users/1", nil))
+		res := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users/1", nil), admin))
 		require.Equal(t, 200, res.Code)
 		require.NotContains(t, res.Body.String(), "password")
 
@@ -40,12 +43,12 @@ func TestUsersGet(t *testing.T) {
 	})
 
 	t.Run("non-existant id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("GET", "/api/v1/users/999", nil))
+		res := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users/999", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
 
 	t.Run("invalid id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("GET", "/api/v1/users/pizza", nil))
+		res := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users/pizza", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
 }
@@ -53,6 +56,7 @@ func TestUsersGet(t *testing.T) {
 func TestUsersNew(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
 	t.Run("normal create", func(t *testing.T) {
 		body, err := json.Marshal(NewUserRequest{
@@ -63,7 +67,7 @@ func TestUsersNew(t *testing.T) {
 		})
 		require.NoError(t, err)
 
-		req := httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body))
+		req := authed(httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)), admin)
 		res := simulate(server, req)
 		require.Equal(t, 200, res.Code)
 		require.NotContains(t, strings.ToLower(res.Body.String()), "password")
@@ -74,7 +78,7 @@ func TestUsersNew(t *testing.T) {
 		require.Equal(t, "new-user@example.com", u.Email)
 		require.Equal(t, "active", u.Status)
 
-		getRes := simulate(server, httptest.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", u.Id), nil))
+		getRes := simulate(server, authed(httptest.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", u.Id), nil), admin))
 		require.Equal(t, 200, getRes.Code)
 	})
 
@@ -86,10 +90,10 @@ func TestUsersNew(t *testing.T) {
 			Password: "hunter2",
 		})
 		require.NoError(t, err)
-		res := simulate(server, httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)))
+		res := simulate(server, authed(httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)), admin))
 		require.Equal(t, 200, res.Code)
 
-		res = simulate(server, httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)))
+		res = simulate(server, authed(httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)), admin))
 		require.Equal(t, 400, res.Code)
 	})
 
@@ -100,7 +104,7 @@ func TestUsersNew(t *testing.T) {
 			Role:  "user",
 		})
 		require.NoError(t, err)
-		res := simulate(server, httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)))
+		res := simulate(server, authed(httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)), admin))
 		require.Equal(t, 400, res.Code)
 	})
 
@@ -112,7 +116,7 @@ func TestUsersNew(t *testing.T) {
 			Password: "hunter2",
 		})
 		require.NoError(t, err)
-		res := simulate(server, httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)))
+		res := simulate(server, authed(httptest.NewRequest("POST", "/api/v1/users", bytes.NewReader(body)), admin))
 		require.Equal(t, 400, res.Code)
 	})
 }
@@ -120,6 +124,7 @@ func TestUsersNew(t *testing.T) {
 func TestUsersUpdate(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
 	t.Run("normal update", func(t *testing.T) {
 		updated := User{
@@ -131,7 +136,7 @@ func TestUsersUpdate(t *testing.T) {
 		body, err := json.Marshal(updated)
 		require.NoError(t, err)
 
-		req := httptest.NewRequest("PUT", "/api/v1/users/1", bytes.NewReader(body))
+		req := authed(httptest.NewRequest("PUT", "/api/v1/users/1", bytes.NewReader(body)), admin)
 		res := simulate(server, req)
 		require.Equal(t, 200, res.Code)
 
@@ -141,7 +146,7 @@ func TestUsersUpdate(t *testing.T) {
 		require.Equal(t, "Sofia R.", u.Name)
 		require.Equal(t, "disabled", u.Status)
 
-		getRes := simulate(server, httptest.NewRequest("GET", "/api/v1/users/1", nil))
+		getRes := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users/1", nil), admin))
 		require.Equal(t, 200, getRes.Code)
 
 		var got User
@@ -150,7 +155,7 @@ func TestUsersUpdate(t *testing.T) {
 	})
 
 	t.Run("bad id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("PUT", "/api/v1/users/notanumber", nil))
+		res := simulate(server, authed(httptest.NewRequest("PUT", "/api/v1/users/notanumber", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
 }
@@ -158,12 +163,13 @@ func TestUsersUpdate(t *testing.T) {
 func TestUsersSetPassword(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
 	t.Run("normal set", func(t *testing.T) {
 		body, err := json.Marshal(SetPasswordRequest{Password: "new-password"})
 		require.NoError(t, err)
 
-		req := httptest.NewRequest("POST", "/api/v1/users/1/password", bytes.NewReader(body))
+		req := authed(httptest.NewRequest("POST", "/api/v1/users/1/password", bytes.NewReader(body)), admin)
 		res := simulate(server, req)
 		require.Equal(t, 200, res.Code)
 	})
@@ -172,13 +178,13 @@ func TestUsersSetPassword(t *testing.T) {
 		body, err := json.Marshal(SetPasswordRequest{Password: ""})
 		require.NoError(t, err)
 
-		req := httptest.NewRequest("POST", "/api/v1/users/1/password", bytes.NewReader(body))
+		req := authed(httptest.NewRequest("POST", "/api/v1/users/1/password", bytes.NewReader(body)), admin)
 		res := simulate(server, req)
 		require.Equal(t, 400, res.Code)
 	})
 
 	t.Run("bad id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("POST", "/api/v1/users/notanumber/password", nil))
+		res := simulate(server, authed(httptest.NewRequest("POST", "/api/v1/users/notanumber/password", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
 }
@@ -186,17 +192,18 @@ func TestUsersSetPassword(t *testing.T) {
 func TestUsersDelete(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	admin := newSession(t, server, users.RoleAdmin)
 
 	t.Run("normal delete", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("DELETE", "/api/v1/users/1", nil))
+		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/1", nil), admin))
 		require.Equal(t, 200, res.Code)
 
-		getRes := simulate(server, httptest.NewRequest("GET", "/api/v1/users/1", nil))
+		getRes := simulate(server, authed(httptest.NewRequest("GET", "/api/v1/users/1", nil), admin))
 		require.Equal(t, 404, getRes.Code)
 	})
 
 	t.Run("bad id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("DELETE", "/api/v1/users/notanumber", nil))
+		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/users/notanumber", nil), admin))
 		require.Equal(t, 404, res.Code)
 	})
 }

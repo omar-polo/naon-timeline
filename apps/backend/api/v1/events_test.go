@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/omar-polo/naon-timeline/apps/backend/services/events"
+	"github.com/omar-polo/naon-timeline/apps/backend/services/users"
 	"github.com/stretchr/testify/require"
 )
 
@@ -96,6 +97,7 @@ func TestEventsGet(t *testing.T) {
 func TestEventsNew(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	session := newSession(t, server, users.RoleUser)
 
 	newEv := Event{
 		Draft: false,
@@ -109,7 +111,7 @@ func TestEventsNew(t *testing.T) {
 	body, err := json.Marshal(newEv)
 	require.NoError(t, err)
 
-	req := httptest.NewRequest("POST", "/api/v1/events", bytes.NewReader(body))
+	req := authed(httptest.NewRequest("POST", "/api/v1/events", bytes.NewReader(body)), session)
 	res := simulate(server, req)
 	require.Equal(t, 200, res.Code)
 
@@ -129,6 +131,7 @@ func TestEventsNew(t *testing.T) {
 func TestEventsUpdate(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	session := newSession(t, server, users.RoleUser)
 
 	t.Run("normal update", func(t *testing.T) {
 		updatedEv := Event{
@@ -143,7 +146,7 @@ func TestEventsUpdate(t *testing.T) {
 		body, err := json.Marshal(updatedEv)
 		require.NoError(t, err)
 
-		req := httptest.NewRequest("PUT", "/api/v1/events/1", bytes.NewReader(body))
+		req := authed(httptest.NewRequest("PUT", "/api/v1/events/1", bytes.NewReader(body)), session)
 		res := simulate(server, req)
 		require.Equal(t, 200, res.Code)
 
@@ -161,7 +164,7 @@ func TestEventsUpdate(t *testing.T) {
 	})
 
 	t.Run("bad id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("PUT", "/api/v1/events/notanumber", nil))
+		res := simulate(server, authed(httptest.NewRequest("PUT", "/api/v1/events/notanumber", nil), session))
 		require.Equal(t, 404, res.Code)
 	})
 }
@@ -169,9 +172,10 @@ func TestEventsUpdate(t *testing.T) {
 func TestEventsDelete(t *testing.T) {
 	server := newtestserver(t)
 	defer server.Close()
+	session := newSession(t, server, users.RoleUser)
 
 	t.Run("normal delete", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("DELETE", "/api/v1/events/1", nil))
+		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/events/1", nil), session))
 		require.Equal(t, 200, res.Code)
 
 		getRes := simulate(server, httptest.NewRequest("GET", "/api/v1/events/1", nil))
@@ -179,7 +183,7 @@ func TestEventsDelete(t *testing.T) {
 	})
 
 	t.Run("bad id", func(t *testing.T) {
-		res := simulate(server, httptest.NewRequest("DELETE", "/api/v1/events/notanumber", nil))
+		res := simulate(server, authed(httptest.NewRequest("DELETE", "/api/v1/events/notanumber", nil), session))
 		require.Equal(t, 404, res.Code)
 	})
 }
