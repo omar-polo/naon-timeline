@@ -4,8 +4,11 @@ import useDashboard from '../../state/useDashboard';
 import { Modal, Button } from '@naon-timeline/ui';
 import type { ModalState } from '../../types';
 
-function randomPassword() {
-  return Math.random().toString(36).slice(2, 10);
+function randomPassword(length = 16) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}';
+  const bytes = new Uint32Array(length);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, b => chars[b % chars.length]).join('');
 }
 
 export default function ResetPasswordModal({
