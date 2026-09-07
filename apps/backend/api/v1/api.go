@@ -46,6 +46,8 @@ func NewServer(pool *sqlitex.Pool) *Server {
 
 	fuego.Get(public, "/{$}", server.status)
 
+	fuego.Get(authenticated, "/me", server.me,
+		fuego.OptionDescription("Retrieve current user info"))
 	fuego.Get(authenticated, "/info", server.info,
 		fuego.OptionDescription("Retrieve some stats"))
 
