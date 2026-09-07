@@ -1,5 +1,6 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import logo from '../../logo-terracotta.svg';
+import useLogout from '../../queries/useLogout';
 
 const NAV_ITEMS = [
   { to: '/', label: 'Overview' },
@@ -14,6 +15,9 @@ export default function Sidebar({
   adminName: string;
   onNavigate?: () => void;
 }) {
+  const navigate = useNavigate();
+  const logoutMutation = useLogout();
+
   return (
     <div className="flex h-full flex-col p-3.5">
       <div className="flex items-center gap-2.5 px-2 pb-6">
@@ -42,7 +46,16 @@ export default function Sidebar({
         ))}
       </nav>
       <div className="mt-auto border-t border-border px-2 pt-2.5 text-[11px] text-muted">
-        Signed in as <strong className="text-ink">{adminName}</strong>
+        <div>
+          Signed in as <strong className="text-ink">{adminName}</strong>
+        </div>
+        <button
+          type="button"
+          onClick={() => logoutMutation.mutate(undefined, { onSuccess: () => navigate({ to: '/login' }) })}
+          className="mt-1 cursor-pointer font-medium text-muted underline-offset-2 hover:underline"
+        >
+          Log out
+        </button>
       </div>
     </div>
   );
