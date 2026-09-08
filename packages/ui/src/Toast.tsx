@@ -6,7 +6,7 @@ export default function Toast({ message }: { message: string | null }) {
     <div
       role="status"
       aria-live="polite"
-      className="fixed bottom-6 right-6 z-20 rounded-lg bg-ink px-4 py-2.5 text-[13px] text-white shadow-[0_4px_14px_rgba(0,0,0,.2)]"
+      className="fixed bottom-6 right-6 z-20 rounded-lg bg-toast px-4 py-2.5 text-[13px] text-toast-ink shadow-[var(--shadow-toast)]"
     >
       {message}
     </div>

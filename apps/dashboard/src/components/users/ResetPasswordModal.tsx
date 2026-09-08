@@ -30,7 +30,7 @@ export default function ResetPasswordModal({
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+            className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
           />
         </TextField>
         <Button variant="ghostSmall" onPress={() => setShowPassword((v) => !v)}>

@@ -53,7 +53,7 @@ export default function DashboardShell() {
           isOpen={mobileNavOpen}
           onOpenChange={setMobileNavOpen}
           isDismissable
-          className="fixed inset-0 z-20 bg-[rgba(30,20,10,.35)] transition-opacity duration-200 ease-out data-[entering]:opacity-0 data-[exiting]:opacity-0"
+          className="fixed inset-0 z-20 bg-scrim transition-opacity duration-200 ease-out data-[entering]:opacity-0 data-[exiting]:opacity-0"
         >
           <AriaModal className="h-full w-[240px] border-r border-border bg-panel transition-transform duration-200 ease-out data-[entering]:-translate-x-full data-[exiting]:-translate-x-full">
             {sidebar}

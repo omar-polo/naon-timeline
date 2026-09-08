@@ -24,7 +24,7 @@ export default function EventFilterBar({
       >
         <Input
           placeholder="Search title or description..."
-          className="w-full rounded-[7px] border border-border bg-white px-2.5 py-2 text-[12.5px]"
+          className="w-full rounded-[7px] border border-border bg-input px-2.5 py-2 text-[12.5px]"
         />
       </TextField>
 
@@ -37,7 +37,7 @@ export default function EventFilterBar({
           if (key) onChange({ status: key as EventStatusFilter });
         }}
         aria-label="Filter by status"
-        className="flex flex-none overflow-hidden rounded-[7px] border border-border bg-white text-[11.5px] font-semibold"
+        className="flex flex-none overflow-hidden rounded-[7px] border border-border bg-input text-[11.5px] font-semibold"
       >
         {SEGMENTS.map((seg) => (
           <ToggleButton

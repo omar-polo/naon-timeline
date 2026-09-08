@@ -110,7 +110,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
                     onBlur={field.handleBlur}
-                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                   <FieldError className="text-[11px] text-danger">{field.state.meta.errors.join(', ')}</FieldError>
                 </TextField>
@@ -128,7 +128,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                     type="date"
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                 </label>
               )}
@@ -141,7 +141,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                   <TextArea
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="min-h-[76px] resize-y rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="min-h-[76px] resize-y rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                 </TextField>
               )}
@@ -154,7 +154,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                   <Input
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                 </TextField>
               )}
@@ -167,7 +167,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                   <Input
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                 </TextField>
               )}
@@ -184,7 +184,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                     <>
                       <span
                         className={`flex h-4 w-4 flex-none items-center justify-center rounded text-[11px] text-white ${
-                          isSelected ? 'bg-accent' : 'border-[1.5px] border-border bg-white'
+                          isSelected ? 'bg-accent' : 'border-[1.5px] border-border bg-input'
                         }`}
                       >
                         {isSelected ? '✓' : ''}
@@ -202,7 +202,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
               <TextField value={addressQuery} onChange={setAddressQuery} className="flex-1">
                 <Input
                   placeholder="Search address, e.g. Piazza Cavour"
-                  className="w-full rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                  className="w-full rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                 />
               </TextField>
               <Button
@@ -246,7 +246,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                     className="flex flex-1 flex-col gap-1.5 text-xs text-muted"
                   >
                     <Label>Lat</Label>
-                    <Input className="w-full rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink" />
+                    <Input className="w-full rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink" />
                   </NumberField>
                 )}
               </form.Field>
@@ -259,7 +259,7 @@ function EventForm({ mode, editingEvent }: { mode: 'create' | 'edit'; editingEve
                     className="flex flex-1 flex-col gap-1.5 text-xs text-muted"
                   >
                     <Label>Lng</Label>
-                    <Input className="w-full rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink" />
+                    <Input className="w-full rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink" />
                   </NumberField>
                 )}
               </form.Field>

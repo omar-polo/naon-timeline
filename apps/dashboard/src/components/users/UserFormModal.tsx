@@ -87,7 +87,7 @@ export default function UserFormModal({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
               />
               <FieldError className="text-[11px] text-danger">
                 {field.state.meta.errors.join(', ')}
@@ -110,7 +110,7 @@ export default function UserFormModal({
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 onBlur={field.handleBlur}
-                className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
               />
               <FieldError className="text-[11px] text-danger">
                 {field.state.meta.errors.join(', ')}
@@ -127,7 +127,7 @@ export default function UserFormModal({
                 <select
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value as Role)}
-                  className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                  className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                 >
                   <option value="admin">Admin</option>
                   <option value="user">Normal user</option>
@@ -145,7 +145,7 @@ export default function UserFormModal({
                 <select
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value as Status)}
-                  className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                  className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                 >
                   <option value="active">Active</option>
                   <option value="disabled">Disabled</option>
@@ -165,7 +165,7 @@ export default function UserFormModal({
                     type={showPassword ? 'text' : 'password'}
                     value={field.state.value}
                     onChange={(e) => field.handleChange(e.target.value)}
-                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                    className="rounded-[7px] border border-border bg-input px-2.5 py-2.5 text-[13px] text-ink"
                   />
                 </TextField>
                 <Button variant="ghostSmall" onPress={() => setShowPassword((v) => !v)}>

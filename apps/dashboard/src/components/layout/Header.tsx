@@ -32,7 +32,7 @@ export default function Header({
             <Link to="/events" className="font-semibold text-muted">
               Events
             </Link>
-            <span className="text-[oklch(70%_0.01_60)]">/</span>
+            <span className="text-subtle">/</span>
             <span className="max-w-[360px] overflow-hidden text-ellipsis whitespace-nowrap font-semibold text-ink">
               {breadcrumbLabel}
             </span>
