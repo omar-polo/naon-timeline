@@ -1,12 +1,14 @@
 import useDashboard from '../../state/useDashboard';
 import useInfo from '../../queries/useInfo';
+import useUsers from '../../queries/useUsers';
 import { Button } from '@naon-timeline/ui';
 import StatsGrid from './StatsGrid';
 import RecentActivityList from './RecentActivityList';
 
 export default function OverviewPage() {
-  const { users, downloadBackup } = useDashboard();
+  const { downloadBackup } = useDashboard();
   const { data: info, isLoading, error } = useInfo();
+  const { data: users } = useUsers();
 
   const stats = [
     { label: 'Total users', value: info?.users ?? 0 },
@@ -26,7 +28,7 @@ export default function OverviewPage() {
       {error && <p className="text-[13px] text-danger">Couldn&apos;t load stats: {error.message}</p>}
 
       {!isLoading && !error && <StatsGrid stats={stats} />}
-      <RecentActivityList users={users} />
+      <RecentActivityList users={users ?? []} />
     </>
   );
 }

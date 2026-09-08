@@ -1,9 +1,7 @@
 import { createContext } from 'react';
-import type { Event, EventFilters, ModalState, User } from '../types';
+import type { EventFilters, ModalState } from '../types';
 
 export interface DashboardContextValue {
-  users: User[];
-  events: Event[];
   modal: ModalState | null;
   eventFilters: EventFilters;
   toast: string | null;
@@ -11,7 +9,6 @@ export interface DashboardContextValue {
   openModal: (modal: ModalState) => void;
   closeModal: () => void;
   setEventFilters: (patch: Partial<EventFilters>) => void;
-  deleteUser: (id: number) => void;
   downloadBackup: () => void;
 }
 

@@ -1,11 +1,13 @@
 import { useNavigate } from '@tanstack/react-router';
 import useDashboard from '../../state/useDashboard';
 import useDeleteEvent from '../../queries/useDeleteEvent';
+import useDeleteUser from '../../queries/useDeleteUser';
 import { ConfirmDialog } from '@naon-timeline/ui';
 
 export default function ModalHost() {
-  const { modal, closeModal, deleteUser, showToast } = useDashboard();
+  const { modal, closeModal, showToast } = useDashboard();
   const deleteEventMutation = useDeleteEvent();
+  const deleteUserMutation = useDeleteUser();
   const navigate = useNavigate();
 
   if (!modal) return null;
@@ -18,7 +20,13 @@ export default function ModalHost() {
         label={modal.label}
         onConfirm={() => {
           if (modal.target === 'user') {
-            deleteUser(modal.id);
+            deleteUserMutation.mutate(modal.id, {
+              onSuccess: () => {
+                closeModal();
+                showToast('Deleted');
+              },
+              onError: () => showToast('Failed to delete user'),
+            });
           } else {
             deleteEventMutation.mutate(modal.id, {
               onSuccess: () => {
