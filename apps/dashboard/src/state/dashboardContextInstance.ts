@@ -12,7 +12,6 @@ export interface DashboardContextValue {
   closeModal: () => void;
   setEventFilters: (patch: Partial<EventFilters>) => void;
   deleteUser: (id: number) => void;
-  resetPassword: (id: number, password: string) => void;
   downloadBackup: () => void;
 }
 

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useForm } from '@tanstack/react-form';
 import { TextField, Label, Input, FieldError } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
@@ -6,6 +7,7 @@ import useCurrentUser from '../../queries/useCurrentUser';
 import useCreateUser from '../../queries/useCreateUser';
 import useUpdateUser from '../../queries/useUpdateUser';
 import { Modal, Button } from '@naon-timeline/ui';
+import randomPassword from '../../lib/randomPassword';
 import type { ModalState, Role, Status } from '../../types';
 
 export default function UserFormModal({
@@ -13,6 +15,7 @@ export default function UserFormModal({
 }: {
   modal: Extract<ModalState, { kind: 'userForm' }>;
 }) {
+  const [showPassword, setShowPassword] = useState(false);
   const { closeModal, openModal, showToast } = useDashboard();
   const { data: users } = useUsers();
   const { data: currentUser } = useCurrentUser();
@@ -155,14 +158,23 @@ export default function UserFormModal({
         {modal.mode === 'create' && (
           <form.Field name="password">
             {(field) => (
-              <TextField className="flex flex-col gap-1.5 text-xs text-muted">
-                <Label>Initial password</Label>
-                <Input
-                  value={field.state.value}
-                  onChange={(e) => field.handleChange(e.target.value)}
-                  className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
-                />
-              </TextField>
+              <div className="flex items-end gap-2">
+                <TextField className="flex flex-1 flex-col gap-1.5 text-xs text-muted">
+                  <Label>Initial password</Label>
+                  <Input
+                    type={showPassword ? 'text' : 'password'}
+                    value={field.state.value}
+                    onChange={(e) => field.handleChange(e.target.value)}
+                    className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
+                  />
+                </TextField>
+                <Button variant="ghostSmall" onPress={() => setShowPassword((v) => !v)}>
+                  {showPassword ? 'Hide' : 'Show'}
+                </Button>
+                <Button variant="ghostSmall" onPress={() => field.handleChange(randomPassword())}>
+                  Generate
+                </Button>
+              </div>
             )}
           </form.Field>
         )}

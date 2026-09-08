@@ -1,24 +1,23 @@
 import { useState } from 'react';
 import { TextField, Label, Input } from 'react-aria-components';
 import useDashboard from '../../state/useDashboard';
+import useUsers from '../../queries/useUsers';
+import useSetPassword from '../../queries/useSetPassword';
 import { Modal, Button } from '@naon-timeline/ui';
+import randomPassword from '../../lib/randomPassword';
 import type { ModalState } from '../../types';
-
-function randomPassword(length = 16) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}';
-  const bytes = new Uint32Array(length);
-  crypto.getRandomValues(bytes);
-  return Array.from(bytes, b => chars[b % chars.length]).join('');
-}
 
 export default function ResetPasswordModal({
   modal,
 }: {
   modal: Extract<ModalState, { kind: 'resetPassword' }>;
 }) {
-  const { users, closeModal, resetPassword } = useDashboard();
+  const { closeModal, showToast } = useDashboard();
+  const { data: users } = useUsers();
+  const setPasswordMutation = useSetPassword();
   const [password, setPassword] = useState('');
-  const user = users.find((u) => u.id === modal.userId);
+  const [showPassword, setShowPassword] = useState(false);
+  const user = users?.find((u) => u.id === modal.userId);
 
   return (
     <Modal isOpen onOpenChange={(open) => !open && closeModal()}>
@@ -28,11 +27,15 @@ export default function ResetPasswordModal({
         <TextField className="flex flex-1 flex-col gap-1.5 text-xs text-muted">
           <Label>New password</Label>
           <Input
+            type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="rounded-[7px] border border-border bg-white px-2.5 py-2.5 text-[13px] text-ink"
           />
         </TextField>
+        <Button variant="ghostSmall" onPress={() => setShowPassword((v) => !v)}>
+          {showPassword ? 'Hide' : 'Show'}
+        </Button>
         <Button variant="ghostSmall" onPress={() => setPassword(randomPassword())}>
           Generate
         </Button>
@@ -41,7 +44,23 @@ export default function ResetPasswordModal({
         <Button variant="ghost" onPress={closeModal}>
           Cancel
         </Button>
-        <Button onPress={() => resetPassword(modal.userId, password)}>Set password</Button>
+        <Button
+          isDisabled={setPasswordMutation.isPending}
+          onPress={() =>
+            setPasswordMutation.mutate(
+              { userId: modal.userId, password },
+              {
+                onSuccess: () => {
+                  closeModal();
+                  showToast('Password reset');
+                },
+                onError: () => showToast('Failed to reset password'),
+              },
+            )
+          }
+        >
+          Set password
+        </Button>
       </div>
     </Modal>
   );

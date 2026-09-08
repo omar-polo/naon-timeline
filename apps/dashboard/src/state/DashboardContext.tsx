@@ -28,10 +28,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         setModal(null);
         showToast('Deleted');
       },
-      resetPassword: () => {
-        setModal(null);
-        showToast('Password reset');
-      },
       downloadBackup: () => {
         showToast('Backup downloaded');
       },
