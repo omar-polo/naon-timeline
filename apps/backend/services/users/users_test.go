@@ -214,7 +214,38 @@ func TestUsers(t *testing.T) {
 
 		u, err := Authenticate(conn, newuser.Email, "hunter2")
 		require.NoError(t, err)
+		require.NotNil(t, u.LastLogin)
+		u.LastLogin = nil // for the comparison to work
 		require.Equal(t, *newuser, *u)
+	})
+
+	t.Run("TestAuthenticateOnlyUpdatesOwnLastLogin", func(t *testing.T) {
+		conn := bt.Conn(t, pool)
+		defer pool.Put(conn)
+		defer bt.AutoRolloutSavepoint(t, conn)()
+
+		loggingIn, err := New(conn, &User{
+			Email:  "auth-self@example.com",
+			Name:   "Logging In",
+			Role:   RoleUser,
+			Status: StatusActive,
+		}, "hunter2")
+		require.NoError(t, err)
+
+		bystander, err := New(conn, &User{
+			Email:  "auth-bystander@example.com",
+			Name:   "Bystander",
+			Role:   RoleUser,
+			Status: StatusActive,
+		}, "hunter2")
+		require.NoError(t, err)
+
+		_, err = Authenticate(conn, loggingIn.Email, "hunter2")
+		require.NoError(t, err)
+
+		got, err := Get(conn, bystander.Id)
+		require.NoError(t, err)
+		require.Nil(t, got.LastLogin, "logging in as one user must not stamp last_login on other users")
 	})
 
 	t.Run("TestAuthenticateWrongPassword", func(t *testing.T) {

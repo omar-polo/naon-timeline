@@ -176,6 +176,22 @@ select id, email, name, password, role, status, created, last_login
 		return nil, ErrInvalidCredentials
 	}
 
+	lastLogin, err := time.Parse(dateLayout, time.Now().UTC().Format(dateLayout))
+	if err != nil {
+		return nil, err
+	}
+
+	query = `update users set last_login = $last_login where id = $id`
+	if err := sqlitex.Execute(conn, query, &sqlitex.ExecOptions{
+		Named: map[string]any{
+			"$last_login": lastLogin.Format(dateLayout),
+			"$id":         u.Id,
+		},
+	}); err != nil {
+		return nil, err
+	}
+	u.LastLogin = &lastLogin
+
 	return &u, nil
 }
 
