@@ -2,9 +2,16 @@ import L from 'leaflet';
 import type { TimelineEvent } from './types';
 import { formatMarkerLabel } from './dates';
 
-const ACCENT = 'oklch(58% 0.15 40)';
-const NEUTRAL_DOT = 'oklch(65% 0.03 60 / 0.7)';
-const INK = 'oklch(30% 0.02 50)';
+// Leaflet inserts this HTML directly into the live document via
+// `L.divIcon`, outside React's control - but that also means these
+// `var(--color-x)` references resolve against the real [data-theme]
+// attribute like any other element on the page, no extra wiring needed.
+const ACCENT = 'var(--color-accent)';
+const NEUTRAL_DOT = 'var(--color-neutral-dot)';
+// Not var(--color-ink): ink inverts to near-white in dark mode, which
+// combined with this label's hardcoded white text would make it
+// unreadable - label-bg stays a dark fill in both themes instead.
+const LABEL_BG = 'var(--color-label-bg)';
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -29,7 +36,7 @@ export function createEventIcon(event: TimelineEvent, isSelected: boolean): L.Di
   ].join(';');
 
   const label = isSelected
-    ? `<div style="position:absolute;bottom:100%;left:50%;transform:translate(-50%,-8px) rotate(45deg);background:${INK};color:#fff;font-size:11px;padding:5px 9px;border-radius:6px;white-space:nowrap;pointer-events:none">${escapeHtml(formatMarkerLabel(event))}</div>`
+    ? `<div style="position:absolute;bottom:100%;left:50%;transform:translate(-50%,-8px) rotate(45deg);background:${LABEL_BG};color:#fff;font-size:11px;padding:5px 9px;border-radius:6px;white-space:nowrap;pointer-events:none">${escapeHtml(formatMarkerLabel(event))}</div>`
     : '';
 
   const html = `
