@@ -6,7 +6,7 @@ export const MONTHS_IT = [
 ];
 
 export function compareEvents(a: TimelineEvent, b: TimelineEvent): number {
-  return (a.month ?? 13) - (b.month ?? 13) || (a.day ?? 32) - (b.day ?? 32);
+  return (a.year - b.year) || (a.month ?? 13) - (b.month ?? 13) || (a.day ?? 32) - (b.day ?? 32);
 }
 
 export function formatChipDate(e: TimelineEvent): string {

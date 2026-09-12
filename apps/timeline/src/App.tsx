@@ -1,8 +1,7 @@
 import { MapContainer, TileLayer, useMap } from 'react-leaflet'
 import { LatLngBounds } from 'leaflet';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
-import eventsData from "./events.json";
 import {
   type TimelineEvent,
   compareEvents,
@@ -12,10 +11,8 @@ import {
   MobileSheet,
   EventMarker,
 } from '@naon-timeline/ui';
+import useEvents from './useEvents';
 
-const events = eventsData as TimelineEvent[];
-
-const YEAR_START = 1840;
 const MOBILE_BREAKPOINT = 720;
 
 function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> {
@@ -29,8 +26,6 @@ function buildEventsByYear(evts: TimelineEvent[]): Map<number, TimelineEvent[]> 
   return map;
 }
 
-const EVENTS_BY_YEAR = buildEventsByYear(events);
-
 // The map's available width changes whenever the desktop side panel
 // mounts/unmounts or the mobile breakpoint flips, neither of which fires a
 // native `window resize` event that Leaflet listens for on its own.
@@ -42,10 +37,30 @@ const MapResize = ({ dep }: { dep: unknown }) => {
   return null;
 };
 
-function App() {
-  const [selectedYear, setSelectedYear] = useState<number>(YEAR_START);
+export default function App() {
+  const { events, error } = useEvents();
+
+  if (error) {
+    return (
+      <p className="flex h-dvh items-center justify-center bg-page text-sm text-danger">
+        Couldn&apos;t load events: {error}
+      </p>
+    );
+  }
+  if (!events) {
+    return <p className="flex h-dvh items-center justify-center bg-page text-sm text-muted">Loading…</p>;
+  }
+
+  return <Timeline events={events} />;
+}
+
+function Timeline({ events }: { events: TimelineEvent[] }) {
+  const eventsByYear = useMemo(() => buildEventsByYear(events), [events]);
+  const yearStart = useMemo(() => Math.min(...events.map((e) => e.year)), [events]);
+
+  const [selectedYear, setSelectedYear] = useState<number>(yearStart);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(
-    () => EVENTS_BY_YEAR.get(YEAR_START)?.[0]?.id ?? null
+    () => eventsByYear.get(yearStart)?.[0]?.id ?? null
   );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
@@ -58,7 +73,7 @@ function App() {
 
   const bounds = new LatLngBounds([45.995334,12.5956731], [45.918336, 12.7074471])
 
-  const yearEvents = EVENTS_BY_YEAR.get(selectedYear) ?? [];
+  const yearEvents = eventsByYear.get(selectedYear) ?? [];
   const selectedEvent = selectedEventId != null ? events.find((e) => e.id === selectedEventId) ?? null : null;
 
   const showPanel = !isMobile && selectedEvent != null;
@@ -144,5 +159,3 @@ function App() {
     </div>
   )
 }
-
-export default App
