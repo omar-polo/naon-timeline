@@ -10,24 +10,34 @@ import (
 type Event = events.Event
 
 func (s *Server) eventsList(fc NoBody) ([]Event, error) {
-	status := fc.QueryParam("status")
-	if status != "" {
-		if _, ok := events.ValidateStatus(status); !ok {
+	var (
+		status     = events.StatusPublished
+		fromy, toy int
+		search     string
+	)
+
+	if contextUser(fc) != nil {
+		status = fc.QueryParam("status")
+		if status != "" {
+			if _, ok := events.ValidateStatus(status); !ok {
+				return nil, fuego.BadRequestError{}
+			}
+		}
+
+		var err error
+
+		fromy, err = intparam(fc, "from-year")
+		if err != nil {
 			return nil, fuego.BadRequestError{}
 		}
-	}
 
-	fromy, err := intparam(fc, "from-year")
-	if err != nil {
-		return nil, fuego.BadRequestError{}
-	}
+		toy, err = intparam(fc, "to-year")
+		if err != nil {
+			return nil, fuego.BadRequestError{}
+		}
 
-	toy, err := intparam(fc, "to-year")
-	if err != nil {
-		return nil, fuego.BadRequestError{}
+		search = fc.QueryParam("search")
 	}
-
-	search := fc.QueryParam("search")
 
 	conn, err := s.pool.Take(fc)
 	if err != nil {
