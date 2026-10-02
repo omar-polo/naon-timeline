@@ -6,7 +6,8 @@
     "dev": "turbo run dev",
     "build": "turbo run build",
     "lint": "turbo run lint",
-    "preview": "turbo run preview"
+    "preview": "turbo run preview",
+    "deploy": "pnpm build && scp -r apps/timeline/dist/* betty.omarpolo.com:/var/www/naon-timeline/timeline/ && scp -r apps/dashboard/dist/* betty.omarpolo.com:/var/www/naon-timeline/dashboard/"
   },
   "devDependencies": {
     "turbo": "^2.10.7"
