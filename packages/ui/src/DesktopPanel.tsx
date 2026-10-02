@@ -1,9 +1,18 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import type { TimelineEvent } from './types';
 import EventDetail from './EventDetail';
 
 export default function DesktopPanel({ event, onClose }: { event: TimelineEvent; onClose: () => void }) {
+  // The panel stays mounted across event switches, so the scroll offset of
+  // the previous event would carry over into the next one's text.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [event.id]);
+
   return (
-    <div className="relative flex-none w-160 border-l border-border bg-panel overflow-y-auto">
+    <div ref={scrollRef} className="relative flex-none w-160 border-l border-border bg-panel overflow-y-auto">
       <button
         aria-label="Close"
         onClick={onClose}

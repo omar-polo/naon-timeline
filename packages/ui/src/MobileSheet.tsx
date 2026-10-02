@@ -1,7 +1,16 @@
+import { useLayoutEffect, useRef } from 'react';
+
 import type { TimelineEvent } from './types';
 import EventDetail from './EventDetail';
 
 export default function MobileSheet({ event, onClose }: { event: TimelineEvent; onClose: () => void }) {
+  // The sheet stays mounted across event switches, so the scroll offset of
+  // the previous event would carry over into the next one's text.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useLayoutEffect(() => {
+    if (scrollRef.current) scrollRef.current.scrollTop = 0;
+  }, [event.id]);
+
   return (
     <div className="absolute inset-0 z-[10000] flex items-end bg-timeline-scrim" onClick={onClose}>
       <div
@@ -9,7 +18,7 @@ export default function MobileSheet({ event, onClose }: { event: TimelineEvent; 
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-8 h-1 rounded-full self-center my-2.5 bg-border" />
-        <div className="overflow-y-auto p-4 pt-2">
+        <div ref={scrollRef} className="overflow-y-auto p-4 pt-2">
           <EventDetail event={event} />
         </div>
       </div>
