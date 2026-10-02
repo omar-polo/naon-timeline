@@ -16,30 +16,34 @@
 @source ".";
 
 @theme {
-  --color-ink: oklch(30% 0.02 50);
-  --color-muted: oklch(45% 0.02 50);
-  --color-subtle: oklch(70% 0.01 60);
-  --color-neutral-bg: oklch(92% 0.015 70);
-  --color-neutral-dot: oklch(65% 0.03 60 / 0.7);
-  --color-border: oklch(88% 0.02 70);
-  --color-accent: oklch(58% 0.15 40);
-  --color-accent-bg: oklch(90% 0.06 45);
-  --color-page: oklch(97% 0.02 80);
-  --color-panel: oklch(98% 0.012 80);
+  --color-ink: oklch(20% 0.01 255);
+  --color-muted: oklch(46% 0.012 255);
+  --color-subtle: oklch(70% 0.008 255);
+  --color-neutral-bg: oklch(93.5% 0.005 250);
+  --color-neutral-dot: oklch(58% 0.012 255 / 0.7);
+  --color-border: oklch(90% 0.006 250);
+  --color-accent: oklch(50% 0.11 245);
+  --color-accent-bg: oklch(95% 0.02 245);
+  --color-page: #fff;
+  --color-panel: oklch(98.5% 0.003 250);
+  /* Pure white against the faintly tinted --color-panel: the design uses the
+     two as distinct surfaces (cards and the floating category bar sit on
+     white, the bottom bar on the tint), so they can't collapse into one. */
+  --color-card: #fff;
   --color-success: oklch(55% 0.13 145);
   --color-success-bg: oklch(92% 0.05 145);
   --color-danger: oklch(55% 0.19 25);
   --color-danger-bg: oklch(93% 0.04 25);
   --color-gray: oklch(50% 0.01 250);
   --color-gray-bg: oklch(92% 0.005 250);
-  --color-dot-inactive: oklch(80% 0.01 70);
+  --color-dot-inactive: oklch(80% 0.008 255);
   --color-input: #fff;
   --color-modal: #fff;
-  --color-toast: oklch(30% 0.02 50);
+  --color-toast: oklch(20% 0.01 255);
   --color-toast-ink: #fff;
-  --color-scrim: rgba(30, 20, 10, 0.35);
+  --color-scrim: rgba(0, 0, 0, 0.35);
   --color-timeline-scrim: rgba(0, 0, 0, 0.15);
-  --color-label-bg: oklch(30% 0.02 50);
+  --color-label-bg: oklch(20% 0.01 255);
   --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
