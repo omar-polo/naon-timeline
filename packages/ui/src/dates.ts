@@ -19,8 +19,3 @@ export function formatMarkerLabel(e: TimelineEvent): string {
   return `${e.day} ${MONTHS_IT[e.month - 1]} ${e.year} · ${e.title}`;
 }
 
-export function eventCountLabel(n: number): string {
-  if (n === 0) return 'nessun evento';
-  if (n === 1) return '1 evento';
-  return `${n} eventi`;
-}

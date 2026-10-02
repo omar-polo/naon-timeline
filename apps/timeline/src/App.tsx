@@ -118,7 +118,7 @@ function Timeline({ events }: { events: TimelineEvent[] }) {
 
   return (
     <div className="relative w-screen h-dvh flex flex-col overflow-hidden bg-page">
-      <Header year={selectedYear} count={yearEvents.length} />
+      <Header />
 
       <div className="relative flex-1 min-h-0 flex overflow-hidden">
         <MapContainer
