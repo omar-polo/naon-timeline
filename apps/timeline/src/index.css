@@ -21,14 +21,19 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: var(--color-accent);
-  text-decoration: inherit;
-}
-a:hover {
-  color: var(--color-accent);
-  opacity: 0.85;
+/* In @layer base, not unlayered: unlayered rules outrank every layered one
+   whatever their specificity, so as plain rules these beat Tailwind's own
+   utilities and no hover:underline or text-* on a link could ever apply. */
+@layer base {
+  a {
+    font-weight: 500;
+    color: var(--color-accent);
+    text-decoration: inherit;
+  }
+  a:hover {
+    color: var(--color-accent);
+    opacity: 0.85;
+  }
 }
 
 body {

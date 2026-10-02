@@ -22,7 +22,7 @@ export default function Header() {
             href={link.href}
             target="_blank"
             rel="noopener"
-            className="text-[15px] font-medium text-muted no-underline hover:text-accent"
+            className="text-[15px] font-medium text-muted no-underline underline-offset-2 hover:text-accent hover:underline"
           >
             {link.label}
           </a>
