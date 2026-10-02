@@ -4,13 +4,13 @@ import { formatMarkerLabel } from './dates';
 
 // Leaflet inserts this HTML directly into the live document via
 // `L.divIcon`, outside React's control - but that also means these
-// `var(--color-x)` references resolve against the real [data-theme]
-// attribute like any other element on the page, no extra wiring needed.
+// `var(--color-x)` references resolve against the page's own custom
+// properties like any other element, no extra wiring needed.
 const ACCENT = 'var(--color-accent)';
 const NEUTRAL_DOT = 'var(--color-neutral-dot)';
-// Not var(--color-ink): ink inverts to near-white in dark mode, which
-// combined with this label's hardcoded white text would make it
-// unreadable - label-bg stays a dark fill in both themes instead.
+// Not var(--color-ink): this is the fill behind the label's hardcoded
+// white text, so it stays a dark surface token rather than following
+// whatever the text ramp does.
 const LABEL_BG = 'var(--color-label-bg)';
 
 function escapeHtml(s: string): string {

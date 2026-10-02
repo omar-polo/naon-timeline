@@ -15,7 +15,3 @@ export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as Pill } from './Pill';
 export { default as Toast } from './Toast';
 export { default as useToast } from './useToast';
-export { default as ThemeSelector } from './ThemeSelector';
-export { ThemeModeProvider } from './ThemeModeProvider';
-export { default as useThemeMode } from './useThemeMode';
-export type { ThemeMode } from './themeModeContextInstance';

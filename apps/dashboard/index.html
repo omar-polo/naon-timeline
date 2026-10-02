@@ -5,17 +5,8 @@
     <link rel="icon" type="image/svg+xml" href="/favicon-light.svg" />
     <link rel="icon" type="image/svg+xml" href="/favicon-dark.svg" media="(prefers-color-scheme: dark)" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="color-scheme" content="light dark" />
+    <meta name="color-scheme" content="light" />
     <title>Naon Timeline - Dashboard</title>
-    <script>
-      (function () {
-        var m = 'system';
-        try { m = localStorage.getItem('naon-theme-mode') || 'system'; } catch (e) {}
-        var dark = m === 'dark' || (m === 'system' &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches);
-        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
-      })();
-    </script>
   </head>
   <body>
     <div id="root"></div>

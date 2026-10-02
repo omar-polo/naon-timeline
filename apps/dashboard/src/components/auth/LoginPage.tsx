@@ -1,9 +1,8 @@
 import { useNavigate } from '@tanstack/react-router';
 import { useForm } from '@tanstack/react-form';
 import { TextField, Label, Input, FieldError } from 'react-aria-components';
-import { Button, ThemeSelector } from '@naon-timeline/ui';
+import { Button } from '@naon-timeline/ui';
 import logo from '../../logo-terracotta.svg';
-import logoDark from '../../logo-terracotta-dark.svg';
 import useLogin from '../../queries/useLogin';
 
 export default function LoginPage() {
@@ -20,12 +19,10 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="relative flex h-dvh items-center justify-center bg-page font-sans text-ink">
-      <ThemeSelector className="absolute right-5 top-5" />
+    <div className="flex h-dvh items-center justify-center bg-page font-sans text-ink">
       <div className="w-full max-w-[340px] rounded-[10px] border border-border bg-panel p-[26px]">
         <div className="mb-6 flex items-center gap-2.5">
-          <img src={logo} alt="" className="logo-light h-7 w-7 flex-none rounded-[7px] object-cover" />
-          <img src={logoDark} alt="" className="logo-dark h-7 w-7 flex-none rounded-[7px] object-cover" />
+          <img src={logo} alt="" className="h-7 w-7 flex-none rounded-[7px] object-cover" />
           <span className="text-sm font-bold tracking-tight">Naon Dashboard</span>
         </div>
 

@@ -1,7 +1,5 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { ThemeSelector } from '@naon-timeline/ui';
 import logo from '../../logo-terracotta.svg';
-import logoDark from '../../logo-terracotta-dark.svg';
 import useLogout from '../../queries/useLogout';
 
 const NAV_ITEMS = [
@@ -26,8 +24,7 @@ export default function Sidebar({
   return (
     <div className="flex h-full flex-col p-3.5">
       <div className="flex items-center gap-2.5 px-2 pb-6">
-        <img src={logo} alt="" className="logo-light h-7 w-7 flex-none rounded-[7px] object-cover" />
-        <img src={logoDark} alt="" className="logo-dark h-7 w-7 flex-none rounded-[7px] object-cover" />
+        <img src={logo} alt="" className="h-7 w-7 flex-none rounded-[7px] object-cover" />
         <span className="whitespace-nowrap text-sm font-bold tracking-tight">Naon Dashboard</span>
       </div>
       <nav className="flex flex-col gap-0.5">
@@ -52,7 +49,6 @@ export default function Sidebar({
         ))}
       </nav>
       <div className="mt-auto flex flex-col gap-2.5 border-t border-border px-2 pt-2.5 text-[11px] text-muted">
-        <ThemeSelector />
         <div>
           <div>
             Signed in as <strong className="text-ink">{userName}</strong>

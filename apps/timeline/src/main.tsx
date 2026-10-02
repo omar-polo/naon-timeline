@@ -1,13 +1,10 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ThemeModeProvider } from '@naon-timeline/ui'
 import './index.css'
 import App from './App.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ThemeModeProvider>
-      <App />
-    </ThemeModeProvider>
+    <App />
   </StrictMode>,
 )

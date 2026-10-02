@@ -7,6 +7,7 @@
 @import "@naon-timeline/ui/theme.css";
 
 :root {
+  color-scheme: light;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -18,16 +19,6 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Lets native form controls/scrollbars/browser chrome follow the app's own
-   [data-theme] override, not just the OS preference a bare `light dark`
-   would defer to - see the color-scheme meta tag in index.html. */
-[data-theme="light"] {
-  color-scheme: light;
-}
-[data-theme="dark"] {
-  color-scheme: dark;
 }
 
 a {

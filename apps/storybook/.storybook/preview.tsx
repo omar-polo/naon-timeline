@@ -1,6 +1,5 @@
 import type { Preview } from '@storybook/react-vite';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { ThemeModeProvider } from '@naon-timeline/ui';
 import { createMockQueryClient } from '../../dashboard/src/testing/mockQueryClient';
 import 'leaflet/dist/leaflet.css';
 import '../../dashboard/src/index.css';
@@ -13,11 +12,9 @@ const queryClient = createMockQueryClient();
 const preview: Preview = {
   decorators: [
     (Story) => (
-      <ThemeModeProvider>
-        <QueryClientProvider client={queryClient}>
-          <Story />
-        </QueryClientProvider>
-      </ThemeModeProvider>
+      <QueryClientProvider client={queryClient}>
+        <Story />
+      </QueryClientProvider>
     ),
   ],
   parameters: {
