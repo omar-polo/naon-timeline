@@ -1,24 +1,19 @@
-import { useLayoutEffect, useRef } from 'react';
-
 import type { TimelineEvent } from './types';
 import EventDetail from './EventDetail';
 
 export default function DesktopPanel({ event, onClose }: { event: TimelineEvent; onClose: () => void }) {
-  // The panel stays mounted across event switches, so the scroll offset of
-  // the previous event would carry over into the next one's text.
-  const scrollRef = useRef<HTMLDivElement>(null);
-  useLayoutEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = 0;
-  }, [event.id]);
-
   return (
-    <div ref={scrollRef} className="relative flex-none w-160 border-l border-border bg-panel overflow-y-auto">
+    <div className="relative flex-none w-160 border-l border-border bg-panel overflow-y-auto">
       <button
-        aria-label="Close"
+        aria-label="Chiudi"
         onClick={onClose}
-        className="absolute right-4 top-4 p-2 bg-neutral-bg hover:opacity-70 border border-solid border-border text-ink transition duration-300 rounded-full cursor-pointer"
+        // label-bg rather than the handoff's rgba(20,14,10,.6): that value is
+        // left over from the warm palette, and this sits over a photo where a
+        // warm cast would read as a mistake.
+        className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full
+          bg-label-bg/60 hover:bg-label-bg/82 text-white transition-colors duration-150 cursor-pointer"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24"
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-[18px] w-[18px]" viewBox="0 0 24 24"
           fill="none" stroke="currentColor" strokeWidth="2"
           strokeLinecap="round" strokeLinejoin="round">
           <line x1="18" y1="6" x2="6" y2="18" />
