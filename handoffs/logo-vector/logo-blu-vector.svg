@@ -1,4 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="-89 -30 2498 2498">
+<!--
+  Pure-vector version of logo-blu.svg, for archival.
+
+  The originals carry two embedded base64 PNGs (artwork plus an alpha mask), a
+  leftover of the PDF/AI conversion - 472KB and 208KB. The raster is not
+  decorative: deleting it loses the three arched windows at the base of the
+  tower. So this was retraced from a 2400px render with potrace rather than
+  stripped, and matches the original render to within edge antialiasing.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400.000000 2400.000000">
   <g transform="translate(0.000000,2400.000000) scale(0.100000,-0.100000)" fill="#174578">
     <path d="M11789 23581 c-24 -19 -24 -21 -29 -278 -3 -180 -9 -265 -17 -280 -7
 -12 -13 -30 -13 -41 0 -13 -16 -26 -50 -42 -62 -29 -144 -113 -172 -177 -14
