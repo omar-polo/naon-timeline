@@ -1,6 +1,22 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="94 902 2200 662">
-  <g transform="translate(0.000000,2400.000000) scale(0.100000,-0.100000)" fill="#000000">
-    <path d="M7040 13010 l0 -1730 395 0 395 0 2 1050 3 1049 860 -1047 860 -1047
+// Inlined rather than referenced as an <img>, so the mark can take its colour
+// from CSS. An <img src="...svg"> is an isolated document: it cannot see
+// --color-accent, which would mean hardcoding a hex here that silently drifts
+// the day the accent token changes. The artwork is a single path, so
+// currentColor is all it takes.
+//
+// Traced from handoffs/logo-full.svg; the pure-vector original is archived in
+// handoffs/logo-vector/.
+export default function LogoFull({ className = "" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="94 902 2200 662"
+      role="img"
+      aria-label="Naon Timeline"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <g transform="translate(0.000000,2400.000000) scale(0.100000,-0.100000)" fill="currentColor">
+        <path d="M7040 13010 l0 -1730 395 0 395 0 2 1050 3 1049 860 -1047 860 -1047
 328 -3 327 -2 0 1730 0 1730 -395 0 -395 0 -2 -1043 -3 -1043 -854 1043 -854
 1043 -333 0 -334 0 0 -1730z M11833 13027 c-419 -941 -765 -1720 -769 -1729
 -6 -17 18 -18 404 -18 l409 0 153 370 153 370 805 -2 804 -3 148 -357 c81
@@ -81,6 +97,8 @@ l-43 48 -49 -46 c-56 -53 -127 -91 -208 -113 -77 -20 -241 -20 -317 1 -197 53
 -105 -7 -138 -14z m257 -156 c170 -35 307 -169 353 -346 27 -104 80 -93 -463
 -93 l-479 0 9 58 c19 128 121 273 234 334 100 54 229 71 346 47z M8580 9300
 l0 -680 90 0 90 0 0 680 0 680 -90 0 -90 0 0 -680z M15260 9300 l0 -680 95 0
-95 0 0 680 0 680 -95 0 -95 0 0 -680z"/>
-  </g>
-</svg>
+95 0 0 680 0 680 -95 0 -95 0 0 -680z" />
+      </g>
+    </svg>
+  );
+}
