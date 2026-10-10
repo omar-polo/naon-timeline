@@ -22,7 +22,7 @@ export default function useEvents() {
       // first so the strip reads left-to-right chronologically, matching
       // the old fixture data (which just happened to already be ordered
       // that way in the source file).
-      setEvents(data.map(toTimelineEvent).sort(compareEvents));
+      setEvents((data ?? []).map(toTimelineEvent).sort(compareEvents));
     });
     return () => {
       cancelled = true;

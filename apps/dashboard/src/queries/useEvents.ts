@@ -27,7 +27,7 @@ export default function useEvents(filters: EventFilters) {
 
       const { data, error } = await api.GET('/api/v1/events', { params: { query } });
       if (error) throw new Error(error.detail ?? error.title ?? 'Failed to fetch events');
-      return data.map(toEvent);
+      return (data ?? []).map(toEvent);
     },
   });
 }
