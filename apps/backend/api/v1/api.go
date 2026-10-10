@@ -37,6 +37,7 @@ func NewServer(pool *sqlitex.Pool) *Server {
 	prefix := "/api/v1"
 
 	public := fuego.Group(s, prefix)
+	fuego.Use(public, server.optionalAuth)
 
 	authenticated := fuego.Group(s, prefix)
 	fuego.Use(authenticated, server.requireAuth)
