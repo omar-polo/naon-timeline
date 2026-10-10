@@ -56,11 +56,17 @@ export default function App() {
 
 function Timeline({ events }: { events: TimelineEvent[] }) {
   const eventsByYear = useMemo(() => buildEventsByYear(events), [events]);
-  const yearStart = useMemo(() => Math.min(...events.map((e) => e.year)), [events]);
+  // Open on the most recent event rather than the oldest. useEvents sorts
+  // the list oldest-first, so the latest is simply its last entry.
+  const initialEvent = events[events.length - 1] ?? null;
 
-  const [selectedYear, setSelectedYear] = useState<number>(yearStart);
+  // events can legitimately be empty (GET /events with no match), which is
+  // why the year has a fallback: Math.min over an empty list gave Infinity.
+  const [selectedYear, setSelectedYear] = useState<number>(
+    () => initialEvent?.year ?? new Date().getFullYear()
+  );
   const [selectedEventId, setSelectedEventId] = useState<number | null>(
-    () => eventsByYear.get(yearStart)?.[0]?.id ?? null
+    () => initialEvent?.id ?? null
   );
   const [sheetOpen, setSheetOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < MOBILE_BREAKPOINT);
