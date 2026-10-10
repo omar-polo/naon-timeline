@@ -6,9 +6,16 @@
 @import "tailwindcss";
 @import "@naon-timeline/ui/theme.css";
 
+/* Roboto for body text.  Overridden here rather than in packages/ui's
+   theme.css because the dashboard imports that same file and keeps the
+   system stack; --font-title (Poppins) is shared, and defined there. */
+@theme {
+  --font-sans: "Roboto", system-ui, Helvetica, Arial, sans-serif;
+}
+
 :root {
   color-scheme: light;
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   line-height: 1.5;
   font-weight: 400;
 

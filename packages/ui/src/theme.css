@@ -45,6 +45,7 @@
   --color-timeline-scrim: rgba(0, 0, 0, 0.15);
   --color-label-bg: oklch(20% 0.01 255);
   --font-sans: -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-title: "Poppins", var(--font-sans);
 }
 
 /* Plain custom properties, not Tailwind theme values: putting a box-shadow
