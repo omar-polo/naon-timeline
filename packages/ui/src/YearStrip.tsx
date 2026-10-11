@@ -5,6 +5,12 @@ const STEP_WIDTH = 64;
 // Fixed width for a year that isn't the current one - it shows just its
 // year number, not its individual events, regardless of how many it has.
 const COLLAPSED_WIDTH = 58;
+// Hairline gap between adjacent years, matching the handoff's 3px
+// column-gap. It has to be part of the offset maths below rather than only
+// a CSS gap: the strip is positioned by summing rendered widths, so a gap
+// the sum doesn't account for would drift the centred dot by 3px per year
+// between it and the window's start.
+const GROUP_GAP = 3;
 // Steps rendered on each side of the current one. Only this small window
 // ever touches the DOM, regardless of how many events/years exist overall -
 // this is what lets the strip stay cheap at a millennium's worth of data.
@@ -169,7 +175,7 @@ export default function YearStrip({
       const isCurrentGroup = group.events.some((e) => e.id === selectedEventId);
       const width = isCurrentGroup ? group.events.length * STEP_WIDTH : COLLAPSED_WIDTH;
       const prev = acc[acc.length - 1];
-      const startOffset = prev ? prev.startOffset + prev.width : 0;
+      const startOffset = prev ? prev.startOffset + prev.width + GROUP_GAP : 0;
       return [...acc, { ...group, isCurrentGroup, width, startOffset }];
     }, []);
   }, [windowEvents, selectedEventId]);
@@ -208,6 +214,7 @@ export default function YearStrip({
       <div
         className="absolute top-0 left-0 flex items-center h-full"
         style={{
+          columnGap: GROUP_GAP,
           transform: `translateX(${baseOffset + dragOffset}px)`,
           transition: isDragging ? 'none' : 'transform 0.2s ease-out',
         }}
