@@ -13,5 +13,6 @@ export { default as Button } from './Button';
 export { default as Modal } from './Modal';
 export { default as ConfirmDialog } from './ConfirmDialog';
 export { default as Pill } from './Pill';
+export { default as LogoMark } from './LogoMark';
 export { default as Toast } from './Toast';
 export { default as useToast } from './useToast';
